@@ -1,13 +1,22 @@
-# GabbaProcTracker
+![GabbaProcTracker](https://raw.githubusercontent.com/Gabbajoe/GabbaProcTracker/main/curseforge/logo.png)
+
+# ⚡ GabbaProcTracker — Count the sparks!
 
 **Track your procs. Compare Open World, dungeons and raids.**
+
+![Classic Era and Hardcore](https://img.shields.io/badge/WoW-Classic_Era_%26_Hardcore-22d3ee?style=flat-square)
+![English and German](https://img.shields.io/badge/Languages-English_%2F_Deutsch-fbbf24?style=flat-square)
+![No dependencies](https://img.shields.io/badge/Dependencies-none-34d399?style=flat-square)
+[![Latest release](https://img.shields.io/github/v/release/Gabbajoe/GabbaProcTracker?style=flat-square&color=22d3ee&label=Release)](https://github.com/Gabbajoe/GabbaProcTracker/releases)
+
+**📦 [Downloads](https://github.com/Gabbajoe/GabbaProcTracker/releases) · 📚 [Guide & controls](https://github.com/Gabbajoe/GabbaProcTracker/blob/main/README.md) · 💬 [Ideas & issues](https://github.com/Gabbajoe/GabbaProcTracker/issues)**
 
 GabbaProcTracker is a standalone proc tracker for **World of Warcraft Classic
 Era and Hardcore**. It counts supported weapon, shield, enchantment, trinket
 and talent effects, then separates the results by the type of area you play in.
 The interface automatically uses **German or English** based on your WoW client.
 
-## Features
+## ✨ Features
 
 - Separate counters for **Open World, dungeons and raids**.
 - **Procs per combat minute**, measured while the relevant equipment or talent
@@ -20,7 +29,7 @@ The interface automatically uses **German or English** based on your WoW client.
 - **SavedVariables export snapshots** for external analysis, plus optional CSV.
 - No required libraries or other addons. Tracking continues with the window closed.
 
-## Supported effects
+## ⚔️ Supported effects
 
 Examples include **Crusader, Fiery Weapon, Lifestealing, Felstriker, Ironfoe,
 Thrash Blade, Flurry Axe, Hand of Edward the Odd, Ebon Hand, Skullflame Shield,
@@ -34,7 +43,7 @@ Effects that share a proc spell ID are grouped together. This is an explicit
 catalog, not automatic recognition of every item. Use `/gpt list` to view all
 supported effects, or `/gpt help` to add a custom proc by spell ID.
 
-## Getting started
+## 🧭 Getting started
 
 - **Left-click the minimap button** or type `/gpt` to open the tracker.
 - **Drag** the minimap button to move it. `/gpt minimap` hides or restores it.
@@ -51,7 +60,7 @@ collection ID and export sequence allow an external importer to recognize repeat
 imports. No web app or automatic upload is included. `/gpt csv` and
 `/gpt csv history` provide copyable CSV as an alternative.
 
-## Understanding the numbers
+## 📊 Understanding the numbers
 
 **Procs per combat minute are not a proc chance per hit.** Attack speed, number
 of targets, spells used and equipment affect the observed rates. The addon does
@@ -63,7 +72,7 @@ Classic Era / Hardcore only. Retail, progression Classic and Season of Discovery
 are not supported targets. Version 0.1.0 has automated logic and packaging tests;
 real-client visual and gameplay checks are still pending.
 
-## Deutsch
+## 🇩🇪 Deutsch
 
 GabbaProcTracker zaehlt Waffen-, Schild-, Verzauberungs-, Trinket- und Talent-Procs
 getrennt nach **Open World, Dungeons und Raids**. Dazu kommen Procs pro Kampfminute,

@@ -1,175 +1,175 @@
-# GabbaProcTracker
+<p align="center">
+  <img src="curseforge/logo.png" alt="GabbaProcTracker — turquoise proc lightning and golden statistics bars" width="200">
+</p>
 
-![GabbaProcTracker](curseforge/logo.png)
+<h1 align="center">GabbaProcTracker</h1>
 
-[Source](https://github.com/Gabbajoe/GabbaProcTracker) · [Releases](https://github.com/Gabbajoe/GabbaProcTracker/releases) · [Issues](https://github.com/Gabbajoe/GabbaProcTracker/issues)
+<p align="center">
+  <strong>Count the sparks. Compare your procs.</strong><br>
+  Weapon, trinket and talent procs across Open World, dungeons and raids. ⚡
+</p>
 
-Version **0.1.0**. Sprache automatisch Deutsch bei `deDE`, sonst Englisch.
-Effekt- und Gegenstandsnamen kommen aus dem WoW-Client.
+<p align="center">
+  <a href="https://github.com/Gabbajoe/GabbaProcTracker/actions/workflows/ci.yml"><img src="https://github.com/Gabbajoe/GabbaProcTracker/actions/workflows/ci.yml/badge.svg?branch=main" alt="Tests and package build"></a>
+  <a href="https://github.com/Gabbajoe/GabbaProcTracker/releases"><img src="https://img.shields.io/github/v/release/Gabbajoe/GabbaProcTracker?style=flat-square&amp;color=22d3ee&amp;label=Release" alt="Latest published release"></a>
+  <a href="https://github.com/Gabbajoe/GabbaProcTracker/releases"><img src="https://img.shields.io/github/downloads/Gabbajoe/GabbaProcTracker/total?style=flat-square&amp;color=fbbf24&amp;label=GitHub%20downloads" alt="GitHub release downloads"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-34d399?style=flat-square" alt="MIT license"></a>
+</p>
 
-Eigenstaendiger Proc-Zaehler fuer WoW Classic Era / Hardcore (Interface 11509,
-entsprechend den anderen Era-Addons in diesem Repository).
+<p align="center">
+  <img src="https://img.shields.io/badge/WoW-Classic_Era_%26_Hardcore-22d3ee?style=flat-square" alt="WoW Classic Era and Hardcore">
+  <img src="https://img.shields.io/badge/Interface-11509-38bdf8?style=flat-square" alt="Interface 11509">
+  <img src="https://img.shields.io/badge/Languages-English_%2F_Deutsch-fbbf24?style=flat-square" alt="English and German interface">
+  <img src="https://img.shields.io/badge/CurseForge--Project-1752634-f16436?style=flat-square" alt="CurseForge project 1752634">
+</p>
 
-## Installation und Bedienung
+<p align="center">
+  <a href="https://github.com/Gabbajoe/GabbaProcTracker/releases"><strong>📦 Downloads</strong></a> ·
+  <a href="https://github.com/Gabbajoe/GabbaProcTracker/issues"><strong>💬 Ideas &amp; issues</strong></a> ·
+  <a href="CHANGELOG.md"><strong>📝 Changelog</strong></a> ·
+  <a href="RELEASING.md"><strong>🛠️ Development</strong></a> ·
+  <a href="README.de.md"><strong>🇩🇪 Deutsch</strong></a>
+</p>
 
-Den Ordner `GabbaProcTracker` nach `_classic_era_/Interface/AddOns/` kopieren.
-Das Spiel neu starten und das Addon in der Charakterauswahl aktivieren.
-Mit `/gpt` oder `/gabbaprocs` das verschiebbare Fenster oeffnen.
+---
 
-Der runde **Minimap-Button** nutzt ein eigenes Icon mit transparenten Ecken:
-Linksklick oeffnet/schliesst das Fenster, Rechtsklick speichert den Export.
-Mit gedrueckter linker Maustaste verschieben; Position und Sichtbarkeit werden
-pro Charakter gespeichert. `/gpt minimap` blendet den Button aus oder wieder ein.
+**GabbaProcTracker** tracks your supported weapon, shield, enchantment, trinket
+and talent procs in **WoW Classic Era / Hardcore**. Compare counts and combat-minute
+rates across **Open World, dungeons and raids**, then export your observations.
 
-- **Zaehler:** Ausloesungen getrennt nach Open World, Dungeons und Raids.
-- **Procs / Minute:** Ausloesungen pro Kampfminute, waehrend der jeweilige
-  Effekt ausgeruestet war. Maus ueber einer Zeile zeigt Procs und Kampfzeit.
-- **Verlauf:** letzte 300 abgeschlossene Kampfsegmente, neueste zuerst,
-  mit Datum/Uhrzeit, Effekt, Gruppe, Procs und Dauer. Maus ueber einer Zeile
-  zeigt das Gebiet. Auch Segmente ohne Proc werden gespeichert.
-- **Katalog** oder `/gpt list`: alle hinterlegten Effekte ansehen.
+A standalone addon with **93 built-in effect groups**, its own window and a round
+minimap button. **No additional addons or external libraries required.**
+The interface uses German on a `deDE` client and English otherwise; spell and
+item names come from your WoW client.
 
-Das Addon zaehlt bei geschlossenem Fenster weiter. Daten werden pro Charakter
-in SavedVariables gespeichert und bleiben bei Reload/Logout erhalten.
-Gesamtzaehler und Kampfzeit bleiben auch erhalten, wenn alte Verlaufseintraege
-aus dem 300-Segmente-Limit fallen. `/gpt reset confirm` loescht alle Messdaten
-dieses Charakters, behaelt aber eigene Effektdefinitionen.
+## ✨ Features
 
-## Export fuer eine Web-App
+| Feature | What you get |
+| --- | --- |
+| ⚔️ **Proc counters** | Separate totals for Open World, dungeons and raids |
+| ⏱️ **Combat rates** | Procs per combat minute while the equipment or talent is eligible |
+| 📜 **History** | Last 300 completed combat segments with zone, duration and counts, including zero-proc fights |
+| 📚 **Catalog** | 93 supported effect groups and custom proc spell IDs |
+| 🧭 **Minimap** | Round icon, draggable position, window toggle and quick export |
+| 💾 **Saved data** | Per-character persistence, a stable UUID and separate measurement collections |
+| 📤 **Export** | SavedVariables snapshots for external analysis, plus copyable CSV |
 
-Im Fenster **Export** anklicken oder `/gpt export` eingeben. Das speichert
-Zusammenfassung und Verlauf gemeinsam unter `GabbaProcTrackerDB.export`.
-Anschliessend **`/reload` oder ausloggen**, damit WoW die Datei schreibt:
+Tracking continues with the window closed. Cumulative totals and combat time
+remain available after older segments leave the history window.
 
+## 📦 Installation
+
+1. Download the ZIP from [Releases](https://github.com/Gabbajoe/GabbaProcTracker/releases).
+2. Extract the `GabbaProcTracker` folder into `_classic_era_/Interface/AddOns/`.
+3. Restart WoW, enable the addon at character selection and type `/gpt`.
+
+Version **0.1.0** was uploaded to CurseForge project **1752634**, file **9243572**.
+Upload succeeded; public availability/moderation approval has not been verified.
+
+## 🧭 Controls
+
+| Action | Result |
+| --- | --- |
+| Minimap **left-click** | Open or close the tracker |
+| Minimap **right-click** | Save an export snapshot |
+| **Drag** the minimap icon | Move it; position is saved per character |
+| `/gpt` or `/gabbaprocs` | Toggle the window |
+| `/gpt minimap` | Hide or restore the minimap button |
+| `/gpt counts` · `/gpt rates` · `/gpt history` | Open counters, combat rates or history |
+| `/gpt list` | Show the built-in catalog |
+| `/gpt export` | Save totals and history together to SavedVariables |
+| `/gpt csv` · `/gpt csv history` | Open copyable CSV totals or history |
+| `/gpt reset confirm` | Reset measurements; keep custom effects and character UUID |
+
+Hover over a row for details. Equipment, zone or talent changes can split combat
+segments. A running segment appears in history when completed, and is included
+as an active snapshot when exporting.
+
+## ⚡ Supported procs
+
+| Source | Examples |
+| --- | --- |
+| **Weapons** | Felstriker, Ironfoe, Thrash Blade, Flurry Axe, Ebon Hand, Hand of Edward the Odd, Blackblade of Shahram |
+| **Shields & ranged** | Skullflame Shield (separate fire and life-drain counters), Bow of Searing Arrows |
+| **Enchantments** | Crusader, Fiery Weapon, Fiery Blaze, Lifestealing |
+| **Trinkets** | Hand of Justice, Mark of the Chosen, Darkmoon Cards, Heart of Wyrmthalak |
+| **Hunter talents** | Improved Aspect of the Hawk / Quick Shots |
+| **Warrior & rogue talents** | Sword Specialization, with a sword equipped |
+| **Warlock talents** | Nightfall / Shadow Trance and Improved Shadow Bolt / Shadow Vulnerability |
+
+View every effect in `/gpt list`. [CATALOG.md](CATALOG.md) contains the full
+ID/source reference in German. Effects sharing a proc spell ID are grouped;
+two identical weapons are counted together, not separately per hand.
+This is an explicit catalog, not automatic recognition of every item or talent.
+Active on-use abilities are not preconfigured as random procs.
+
+<details>
+<summary>🔎 How triggers are counted</summary>
+
+- Buff applications and refreshes count; removals and ordinary stack changes do not.
+- Target debuffs must originate from you. Selected armor-reduction effects also count stack gains.
+- Damage procs count their damage or miss event, including resisted triggers. Periodic damage ticks do not count again.
+- Lifestealing and Skullflame life drain count damage, not the associated healing.
+- Extra attacks count once per trigger event, regardless of attacks granted. Ironfoe granting two attacks is one proc.
+- Area effects group targets with the exact same combat-log timestamp; different timestamps cannot always be linked to one trigger.
+- Shahram counts your summon, not its subsequent spells or party buffs.
+- Quick Shots counts the buff, not accelerated shots; Rapid Fire is not included.
+- Nightfall counts Shadow Trance, not consumption of the instant-cast benefit.
+- Shadow Vulnerability counts your reported applications/refreshes, not charge consumption or every Shadow Bolt crit. It increases shadow damage taken rather than reducing resistance.
+
+</details>
+
+## 📤 Export your observations
+
+Click **Export**, right-click the minimap icon or use `/gpt export`. Then
+**`/reload` or log out** so WoW writes the character's file:
+
+```text
+_classic_era_/WTF/Account/<ACCOUNT>/<REALM>/<CHARACTER>/SavedVariables/GabbaProcTracker.lua
 ```
-_classic_era_/WTF/Account/<ACCOUNT>/<REALM>/<CHARAKTER>/SavedVariables/GabbaProcTracker.lua
-```
 
-Diese `.lua`-Datei kann spaeter in einer Web-App importiert werden. Ein
-Datei-Upload/Importer ist noch nicht Teil dieses Addons. Es erfolgt kein Upload
-aus dem Spiel. Das Exportformat ist in [EXPORT.md](EXPORT.md) dokumentiert.
+The snapshot is stored in `GabbaProcTrackerDB.export`. It contains cumulative
+totals, combat exposure and retained history, plus a persistent **character UUID**,
+a **collection ID** and an increasing **export sequence** for import deduplication.
+An external importer must replace cumulative snapshots, not add repeated totals.
 
-Jeder Charakter besitzt eine dauerhaft gespeicherte **UUID**. Sie bleibt bei
-Reload, Updates und Zaehler-Reset erhalten. Eine neue Messreihen-ID trennt Daten
-nach einem Reset. Jeder Export bekommt eine fortlaufende Nummer. Wiederholte
-Importe sollen in der Web-App aktualisieren, nicht die Gesamtzahlen addieren.
-Loeschen der SavedVariables erzeugt eine neue Identitaet; eine Kopie behaelt sie.
-Die UUID ist eine lokale Kennung, keine Anonymisierung: Name und Realm sind im Export.
+Each export replaces the previous snapshot without interrupting tracking. It
+stays unchanged until the next export, even after a counter reset. A reset starts
+a new collection but keeps the character UUID. Deleting SavedVariables creates
+a new identity; copying the file copies it. Character name and realm are included.
 
-Der Export ersetzt jeweils den letzten Snapshot. Er unterbricht die Messung
-nicht und veraendert sich erst beim naechsten Export. Auch ein Reset behaelt den
-letzten Snapshot, bis erneut exportiert wird. Die Gesamtzahlen enthalten die
-gesamte Messreihe, der Detailverlauf maximal 300 abgeschlossene Segmente und
-ein laufendes Segment. Alte Details werden nicht unbegrenzt archiviert.
+**No web app or automatic upload is included.** The machine-readable format is
+documented in [EXPORT.md](EXPORT.md). Detailed history is limited to 300 completed
+segments plus the current segment; totals cover the entire collection.
 
-Optional bleibt CSV zum Kopieren verfuegbar: `/gpt csv` fuer Summen und
-`/gpt csv history` fuer den Verlauf. Strg+A/Strg+C, als UTF-8-Datei speichern;
-Trennzeichen Semikolon, Dezimalpunkt. `/gpt export counts` und
-`/gpt export history` speichern ebenfalls den vollstaendigen SavedVariables-Snapshot.
+For CSV, use `/gpt csv` or `/gpt csv history`, copy with Ctrl+A / Ctrl+C, and save
+as UTF-8. Separator: semicolon; decimal separator: period. A missing rate means no
+measured combat exposure; zero procs with positive exposure is a valid observation.
 
-## Messung
+## 📊 Read the numbers correctly
 
+**Procs per combat minute are not a proc chance per hit.** Attack speed, target
+count, spell choices and equipment affect rates. Compare similar conditions and
+collect enough combat time in each area. A higher observed rate does not prove
+that the game's proc rules differ between areas.
 
-Open World umfasst auch Haeuser und Hoehlen ausserhalb einer Instanz.
-Dungeons entsprechen Instanztyp `party`, Raids `raid`. Schlachtfelder und Arenen
-werden nicht erfasst. Die Gruppe wird beim Ereignis aus `IsInInstance()` gelesen.
-Die Messung beginnt mit Spieler-Kampfbeginn und endet bei Kampfende, Logout,
-Gebiets- oder Ausruestungswechsel. Ein Wechsel beginnt gegebenenfalls ein neues
-Segment. Ein Reload waehrend des Kampfes beginnt nach dem Laden ein neues Segment.
-Aktuelle Segmente erscheinen nach ihrem Abschluss im Verlauf.
+Open World includes buildings and caves outside instances. Dungeons use instance
+type `party`, raids use `raid`; battlegrounds and arenas are excluded. Tracking
+runs from combat start to combat end, logout or a segment-splitting change.
+Procs outside a combat segment appear in totals and zero-duration history records,
+but not in combat-minute rates. Unsaved data can be lost in a client crash.
 
-Procs ausserhalb eines Kampfsegments erscheinen im Zaehler und als Eintrag mit
-0 Sekunden, aber nicht in der Kampfminuten-Rate. Bei einem Client-Absturz koennen
-noch nicht auf Platte gespeicherte Messdaten verloren gehen.
+Hunter and warlock talent rates use all combat time with the talent learned,
+including time without eligible attacks or with another hunter aspect active.
+Sword Specialization additionally requires a sword. Custom effects are always
+eligible for exposure tracking. Eligible attack attempts and confidence intervals
+are not calculated.
 
-**Procs pro Minute sind keine Proc-Chance pro Treffer.** Angriffstempo,
-Trefferzahl, Zauberauswahl, Ziele, Ausruestung und Kampfpausen unterscheiden sich
-zwischen Gebieten. Eine hoehere Rate ist eine Beobachtung, kein Beweis fuer eine
-andere Spielmechanik. Fuer einen aussagekraeftigen Vergleich in allen drei
-Gruppen ausreichend Kampfzeit mit vergleichbarer Ausruestung sammeln.
-Es werden keine ausloeseberechtigten Treffer/Zauber und keine Konfidenzintervalle
-berechnet. Eigene Effekte gelten fuer die Zeitmessung immer als ausgeruestet.
+## 🧩 Custom effects
 
-## Eingebaute Effekte
+Use the **proc spell ID**, not an item ID or enchantment recipe ID:
 
-Krieger/Schurke: **Schwertspezialisierung**, alle Talentraenge, ein Zaehler
-fuer Proc-Zauber 16459. Die Kampfzeit wird nur mit gelerntem Talent und
-mindestens einem ausgeruesteten Einhand- oder Zweihandschwert gemessen.
-Haupt- und Nebenhand werden beruecksichtigt, aber nicht getrennt ausgezaehlt.
-Hauklinge, Ironfoe und andere Gegenstands-Procs bleiben separate Effekte.
-
-Hexenmeister: **Schattentrance / Einbruch der Nacht** (17941) und
-**Schattenverwundbarkeit / Verbesserter Schattenblitz** (17800, mit Alias-IDs
-17794, 17798, 17797 und 17799 fuer niedrigere Raenge). Anwendungen und
-Erneuerungen werden gezaehlt; der verbrauchte Sofortzauber, Debuff-Ladungsverlust
-und fremde Anwendungen zaehlen nicht erneut. Bei Schattenverwundbarkeit handelt
-es sich um erhoehten erlittenen Schattenschaden, nicht um reduzierte Resistenz.
-Die Rate bezieht sich jeweils auf die gesamte Kampfzeit mit gelerntem Talent.
-Erfasst werden gemeldete eigene Debuff-Anwendungen/Erneuerungen, nicht pauschal
-jeder Schattenblitz-Crit (etwa wenn ein staerkerer fremder Debuff nicht ersetzt wird).
-
-Die vollstaendige Tabelle mit Gegenstands- und Zauber-IDs steht in
-[CATALOG.md](CATALOG.md) und im Spiel unter `/gpt list`.
-Der erweiterte Katalog deckt auch direkte Schadens-Procs, Blutungen,
-Gegner-Debuffs und stapelbare Ruestungsreduktion ab. Gemeinsam verwendete
-Zauber-IDs werden als gemeinsame Effektgruppe gezaehlt. Gegenstaende in allen
-Ausruestungsplaetzen (einschliesslich Ringe und Fernkampf) werden beruecksichtigt.
-
-Jaeger-Talent: **Verbesserter Aspekt des Falken / Schnelle Schuesse** (Buff 6150,
-alle Talentraenge). Zaehlt Anwendung und Erneuerung des eigenen Buffs,
-nicht jeden beschleunigten Schuss. Schnellfeuer (aktive Faehigkeit) ist separat
-und wird hier nicht mitgezaehlt. Der Effekt wird bei gelerntem Talent erkannt.
-Die Rate bezieht sich auf die gesamte Kampfzeit mit gelerntem Talent, also auch
-Zeiten mit einem anderen Aspekt oder ohne Auto-Schuss. Diese Zeitbasis steht
-auch im Tooltip; es ist keine Proc-Chance je Auto-Schuss.
-Quelle: [Classic-Jaeger-Aspekte](https://github.com/wowsims/classic/blob/master/sim/hunter/aspects.go).
-
-Waffen: Felstriker (Buff-Anwendung/Erneuerung), Ironfoe (ein Proc je
-Zusatzangriffs-Ereignis, unabhaengig von der Anzahl gewaehrter Angriffe),
-Ebenholzhand (Schattenschaden).
-Hand von Edward dem Seltsamen (Fokus-Buff fuer den naechsten Sofortzauber),
-Hauklinge / Thrash Blade (Doppelschlag) und Wirbelaxt / Flurry Axe (Zusatzangriff).
-Bei Fokus wird die Buff-Ausloesung gezaehlt, nicht sein Verbrauch durch einen Zauber.
-Schwarze Klinge von Shahram: ein Proc je eigener Beschwoerung
-([Zauber 16602](https://www.wowhead.com/classic/spell=16602/shahram)), keine
-zusaetzliche Zaehlung seiner Folgezauber oder Buffs auf Gruppenmitgliedern.
-Die sechs moeglichen Folgeeffekte werden nicht einzeln ausgewertet.
-Fernkampf: Bogen der sengenden Pfeile. Der Fernkampfslot wird fuer Erkennung und
-Kampfzeit beruecksichtigt; andere Boegen, Schusswaffen und Armbrueste brauchen
-weiterhin eine explizite Effektdefinition. Jäger koennen alle eingebauten
-Trinket-Effekte nutzen; weitere Klassen- und Tierfaehigkeiten werden nicht automatisch erfasst.
-Schilde: Schaedelflammenschild, mit getrennten Zeilen fuer Lebensentzug und Feuer.
-Lebensentzug zaehlt nur das Schadensereignis, nicht die zusaetzliche Heilung.
-Die Gegenstaende muessen ausgeruestet sein; die Waffenplaetze beider Haende
-werden gelesen. Zwei gleiche Waffen werden zusammengefasst.
-
-Waffenverzauberungen: Kreuzfahrer, Feurige Waffe, Feuriger Schein, Lebensdiebstahl.
-Trinkets: Hand der Gerechtigkeit, Mal der Auserwaehlten, Dunkelmondkarten
-Blauer Drache / Mahlstrom / Heldentum, Herz von Wyrmthalak, Uther's Strength,
-Force of Will und The Lion Horn of Stormwind.
-
-Das ist ein expliziter Katalog, keine automatische Erkennung aller Gegenstaende.
-Aktive Benutzen-Effekte sind nicht als zufaellige Procs vorkonfiguriert.
-IDs wurden mit den [Classic-Simulationsdaten fuer Verzauberungen](https://github.com/wowsims/classic/blob/master/sim/common/enchant_effects.go)
-und [Gegenstaende](https://github.com/wowsims/classic/blob/master/sim/common/item_effects.go)
-abgeglichen. Es wurde kein Simulationscode uebernommen.
-
-Buffs zaehlen bei Anwendung/Erneuerung auf dem eigenen Charakter, nicht bei
-Stack-Aenderungen. Gegner-Debuffs zaehlen nur von dir selbst ausgeloeste
-Anwendungen/Erneuerungen (auch gemeldete Fehlschlaege); bei Annihilator und
-Bashguuder/Rivenspike zaehlen auch Stack-Zunahmen. Periodische Schadensticks,
-entfernte Stacks und auslaufende Buffs zaehlen nicht als erneuter Proc.
-Schadens-Procs zaehlen ueber ihr Schadensereignis (auch
-resistierte/verfehlte Ausloesungen). Lebensdiebstahl zaehlt nicht erneut bei
-Heilung. Zusatzangriffe zaehlen pro Ausloesungsereignis, nicht pro gewaehrtem
-Angriff. Flaecheneffekte im Katalog fassen Ziele mit identischem Combat-Log-Zeitstempel
-zusammen; getrennte Zeitstempel lassen sich nicht sicher einem Proc zuordnen.
-Kreuzfahrer auf zwei Waffen wird gemeinsam gezaehlt, ohne Zuordnung zur Hand.
-
-Eigene Effekte lassen sich anhand ihrer **Proc-Zauber-ID**, nicht Item-ID oder
-Verzauberungsrezept-ID, hinzufuegen:
-
-```
+```text
 /gpt add 12345 buff
 /gpt add 12345 damage
 /gpt add 12345 heal
@@ -177,49 +177,28 @@ Verzauberungsrezept-ID, hinzufuegen:
 /gpt remove 12345
 ```
 
-Pro ID genau den passenden Ereignistyp verwenden. `buff` ist fuer eigene Buffs,
-nicht fuer Debuffs auf Gegnern. Entfernen stoppt die Erfassung eines eigenen
-Effekts; bereits gesammelte Daten bleiben sichtbar.
+Choose one matching event type per ID. `buff` is for your own buffs, not enemy
+debuffs. Removing a custom effect stops tracking it and preserves existing counts.
 
-## Pruefung
+## 🛠️ Development
 
-Vom Repository-Hauptverzeichnis:
-`lua GabbaProcTracker/tests/run.lua` und
-`lua GabbaProcTracker/tests/export_test.lua`.
-Die Tests pruefen Ereignisfilter, Gruppierung, Vermeidung von Doppelzaehlung,
-Kampfzeit nur mit ausgeruesteten Effekten, Null-Proc-Kaempfe, Persistenz,
-Verlaufslimit sowie das Laden und die Fenster-/Befehlslogik mit WoW-API-Mocks.
-Ein echter Ingame-Test ist noch erforderlich: Effekt ausloesen, Fenster mit
-Combat-Log vergleichen, Dungeon/Raid wechseln und Persistenz per `/reload`
-pruefen. Die Mocks ersetzen keine visuelle Pruefung im WoW-Client.
+```sh
+bash tests/run_tests.sh
+python3 -m unittest discover -s tests -p 'test_*.py' -v
+python3 tools/build_package.py --tag v0.1.0
+```
 
-## English quick start
+CI tests Lua 5.1 logic, both UI languages, exports, minimap behavior and packaging.
+Tags produce GitHub release ZIPs and SHA256 checksums, with CurseForge uploads
+when configured. See [RELEASING.md](RELEASING.md) and
+[curseforge/PROJECT.md](curseforge/PROJECT.md).
 
-Version **0.1.0**, WoW Classic Era / Hardcore. The UI uses German for deDE
-and English for other client locales. Spell/item names follow the WoW client.
-Open `/gpt`: Counters, Procs / minute, History, Catalog. Tracking continues
-while the window is closed. World, dungeon and raid counters are separate.
+Automated tests do not replace a real WoW client check. Visual/gameplay validation
+is still pending. Classic Era / Hardcore is the supported target, not Retail,
+progression Classic or Season of Discovery.
 
-Click **Export** or run `/gpt export`, then `/reload` or log out. Upload the
-character's `WTF/Account/<ACCOUNT>/<REALM>/<CHARACTER>/SavedVariables/GabbaProcTracker.lua`
-to a compatible future web importer. The snapshot is in `GabbaProcTrackerDB.export`.
-No web importer or automatic upload is included. Each character has a persistent
-UUID; resets start a new collection. Imports must replace cumulative snapshots,
-not add them. Full totals are retained; detailed history is limited to the last
-300 completed segments plus the current segment. Export again to update it.
-See [EXPORT.md](EXPORT.md) for the schema. `/gpt csv [history]` opens optional CSV.
+## 📄 License
 
-## Development and releases
-
-From the repository directory: `bash tests/run_tests.sh`, then
-`python3 -m unittest discover -s tests -p 'test_*.py' -v`.
-Build: `python3 tools/build_package.py --tag v0.1.0`.
-See [RELEASING.md](RELEASING.md) for CI, GitHub releases and CurseForge setup,
-and [curseforge/PROJECT.md](curseforge/PROJECT.md) for project metadata.
-
-Minimap: left-click toggles the window, right-click saves an export, drag moves
-it; `/gpt minimap` toggles visibility. Position/visibility are saved per character.
-
-## License / Lizenz
-
-[MIT License](LICENSE), confirmed by the author on 2026-10-18.
+[MIT](LICENSE) · Copyright © 2026 Nils (Gabbajoe).
+The MIT file and CurseForge metadata were added after the initial v0.1.0 archive;
+the published archive is preserved, and future packages include the license.

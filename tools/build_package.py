@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RUNTIME = (
     'GabbaProcTracker.toc', 'Locale.lua', 'Tracker.lua', 'Catalog.lua',
     'Export.lua', 'Minimap.lua', 'Core.lua', 'Assets/Icon.tga', 'Assets/Minimap.tga',
-    'README.md', 'CATALOG.md', 'EXPORT.md', 'CHANGELOG.md', 'LICENSE',
+    'README.md', 'README.de.md', 'CATALOG.md', 'EXPORT.md', 'CHANGELOG.md', 'LICENSE',
 )
 
 

@@ -33,7 +33,10 @@ CurseForge author form. The existing published v0.1.0 archive is not rewritten.
 
 The TOC records `## X-Curse-Project-ID: 1752634`. Repository variable
 `CURSEFORGE_PROJECT_ID` is configured as `1752634`. The author upload secret
-`CURSEFORGE_API_TOKEN` is still required. See `RELEASING.md` for automation.
+`CURSEFORGE_API_TOKEN` is configured and the access check succeeded.
+Release **0.1.0** was uploaded on 2026-10-18 as file **9243572**.
+[Successful upload run](https://github.com/Gabbajoe/GabbaProcTracker/actions/runs/39147826817).
+See `RELEASING.md` for automation.
 A submitted project/file still requires CurseForge moderation.
 
 Official creation guide:
