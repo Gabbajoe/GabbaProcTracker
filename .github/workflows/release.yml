@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/check
+        id: check
+        with:
+          tag: ${{ github.ref_name }}
+      - name: Publish GitHub release
+        id: publish
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_VERSION: ${{ steps.check.outputs.version }}
+          RELEASE_ARCHIVE: ${{ steps.check.outputs.archive }}
+          RELEASE_CHECKSUM: ${{ steps.check.outputs.checksum }}
+          RELEASE_NOTES: ${{ steps.check.outputs.notes }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo 'GitHub release already exists; retaining existing assets.'
+            echo 'created=false' >> "$GITHUB_OUTPUT"
+          else
+            flags=()
+            if [[ "$RELEASE_VERSION" == *-* ]]; then flags+=(--prerelease); fi
+            gh release create "$RELEASE_TAG" "$RELEASE_ARCHIVE" "$RELEASE_CHECKSUM" \
+              --verify-tag --title "GabbaProcTracker $RELEASE_VERSION" --notes-file "$RELEASE_NOTES" "${flags[@]}"
+            echo 'created=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Upload to CurseForge when configured
+        if: steps.publish.outputs.created == 'true'
+        shell: bash
+        env:
+          CURSEFORGE_PROJECT_ID: ${{ vars.CURSEFORGE_PROJECT_ID }}
+          CURSEFORGE_API_TOKEN: ${{ secrets.CURSEFORGE_API_TOKEN }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_ARCHIVE: ${{ steps.check.outputs.archive }}
+          RELEASE_NOTES: ${{ steps.check.outputs.notes }}
+        run: |
+          if [[ -z "$CURSEFORGE_PROJECT_ID" || -z "$CURSEFORGE_API_TOKEN" ]]; then
+            echo 'CurseForge upload skipped: both project ID and API token are required.'
+            exit 0
+          fi
+          python tools/upload_curseforge.py --archive "$RELEASE_ARCHIVE" \
+            --notes "$RELEASE_NOTES" --tag "$RELEASE_TAG"

@@ -1,0 +1,44 @@
+name: Check GabbaProcTracker
+description: Validate Lua and release packaging.
+inputs:
+  tag:
+    description: Optional release tag matching the TOC.
+    required: false
+outputs:
+  version:
+    description: TOC version.
+    value: ${{ steps.package.outputs.version }}
+  archive:
+    description: Installable ZIP.
+    value: ${{ steps.package.outputs.archive }}
+  checksum:
+    description: SHA256 file.
+    value: ${{ steps.package.outputs.checksum }}
+  notes:
+    description: Release notes.
+    value: ${{ steps.package.outputs.notes }}
+runs:
+  using: composite
+  steps:
+    - name: Install Lua 5.1 and ripgrep
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y lua5.1 ripgrep
+    - name: Test
+      shell: bash
+      env:
+        LUA: lua5.1
+        LUAC: luac5.1
+      run: |
+        bash tests/run_tests.sh
+        python3 -m unittest discover -s tests -p 'test_*.py' -v
+    - name: Build package
+      id: package
+      shell: bash
+      env:
+        RELEASE_TAG: ${{ inputs.tag }}
+      run: |
+        args=(--output-dir dist --github-output "$GITHUB_OUTPUT")
+        if [[ -n "$RELEASE_TAG" ]]; then args+=(--tag "$RELEASE_TAG"); fi
+        python3 tools/build_package.py "${args[@]}"

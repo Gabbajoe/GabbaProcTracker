@@ -1,0 +1,15 @@
+## Interface: 11509
+## Title: GabbaProcTracker
+## Notes-deDE: Proc-Zaehler fuer Waffen, Schilde, Verzauberungen, Trinkets und Talente: Open World, Dungeons und Raids.
+## Notes: Weapon, enchantment, trinket and talent procs by Open World, dungeon and raid.
+## Author: Nils
+## Version: 0.1.0
+## IconTexture: Interface\AddOns\GabbaProcTracker\Assets\Icon.tga
+## SavedVariablesPerCharacter: GabbaProcTrackerDB
+
+Locale.lua
+Tracker.lua
+Catalog.lua
+Export.lua
+Minimap.lua
+Core.lua
