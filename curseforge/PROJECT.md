@@ -1,13 +1,14 @@
 # CurseForge project setup
 
-Status: prepared, not yet created. No project ID has been assigned here.
-Create at https://authors.curseforge.com/#/projects/create/choose-game .
+Project ID supplied by the author on 2026-10-18: **1752634**.
+Public project URL and moderation status have not yet been verified.
 
 | Field | Value |
 | --- | --- |
 | Game | World of Warcraft |
 | Class | Addons |
 | Name | GabbaProcTracker |
+| Project ID | 1752634 |
 | Summary | Track weapon, trinket, enchantment and talent procs in Classic Era and Hardcore. Compare Open World, dungeons and raids, and export your data. |
 | Primary category | Combat |
 | Additional categories | Buffs & Debuffs; Data Export (if offered in the author form) |
@@ -28,9 +29,9 @@ No open-source license has been granted by this setup. Select the project licens
 in the author dashboard; All Rights Reserved is available if retaining reuse rights.
 Do not label it MIT or another open-source license without choosing that deliberately.
 
-After creation, record the actual project ID, add `## X-Curse-Project-ID: <id>`
-to the TOC, and set repository variable `CURSEFORGE_PROJECT_ID`. Add the author
-upload token as secret `CURSEFORGE_API_TOKEN`. See `RELEASING.md` for automation.
+The TOC records `## X-Curse-Project-ID: 1752634`. Repository variable
+`CURSEFORGE_PROJECT_ID` is configured as `1752634`. The author upload secret
+`CURSEFORGE_API_TOKEN` is still required. See `RELEASING.md` for automation.
 A submitted project/file still requires CurseForge moderation.
 
 Official creation guide:

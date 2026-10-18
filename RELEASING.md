@@ -40,17 +40,20 @@ are not automatically retried because they could create duplicate files.
 
 ## CurseForge setup (one time)
 
-Create the project in the [author dashboard](https://authors.curseforge.com/#/projects/create/choose-game)
-using [PROJECT.md](curseforge/PROJECT.md), [DESCRIPTION.md](curseforge/DESCRIPTION.md)
-and `curseforge/logo.png`. No project ID has been assigned in this repository yet.
+The author supplied project ID **1752634**. Metadata and artwork are in
+[PROJECT.md](curseforge/PROJECT.md), [DESCRIPTION.md](curseforge/DESCRIPTION.md)
+and `curseforge/logo.png`. The public project URL/moderation status are not yet verified.
 
 Under [repository Actions settings](https://github.com/Gabbajoe/GabbaProcTracker/settings/secrets/actions):
 
-- **Variable** `CURSEFORGE_PROJECT_ID`: this new project's numeric ID.
+- **Variable** `CURSEFORGE_PROJECT_ID`: `1752634` (configured).
 - **Secret** `CURSEFORGE_API_TOKEN`: an author upload token. Never commit it or paste it into an issue.
 
 Author tokens: https://authors.curseforge.com/#/settings/api-tokens .
-Also add `## X-Curse-Project-ID: <id>` to the TOC and record the actual project URL.
+The current TOC includes `## X-Curse-Project-ID: 1752634`. Record the actual
+public project URL once confirmed. The existing v0.1.0 tag and ZIP remain unchanged;
+the project ID is passed separately to the uploader, so that release can still
+be uploaded using the manual workflow. Future releases include the TOC metadata.
 
 Run **Actions → Check CurseForge access**. This verifies token/API access and the
 exact Classic Era client version lookup. It does not establish project ownership.

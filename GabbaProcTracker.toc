@@ -4,6 +4,7 @@
 ## Notes: Weapon, enchantment, trinket and talent procs by Open World, dungeon and raid.
 ## Author: Nils
 ## Version: 0.1.0
+## X-Curse-Project-ID: 1752634
 ## IconTexture: Interface\AddOns\GabbaProcTracker\Assets\Icon.tga
 ## SavedVariablesPerCharacter: GabbaProcTrackerDB
 
