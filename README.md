@@ -219,3 +219,7 @@ and [curseforge/PROJECT.md](curseforge/PROJECT.md) for project metadata.
 
 Minimap: left-click toggles the window, right-click saves an export, drag moves
 it; `/gpt minimap` toggles visibility. Position/visibility are saved per character.
+
+## License / Lizenz
+
+[MIT License](LICENSE), confirmed by the author on 2026-10-18.

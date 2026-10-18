@@ -9,6 +9,8 @@ Public project URL and moderation status have not yet been verified.
 | Class | Addons |
 | Name | GabbaProcTracker |
 | Project ID | 1752634 |
+| Project license | MIT License |
+| Project distribution | Allow distribution to 3rd party (shown in author setup) |
 | Summary | Track weapon, trinket, enchantment and talent procs in Classic Era and Hardcore. Compare Open World, dungeons and raids, and export your data. |
 | Primary category | Combat |
 | Additional categories | Buffs & Debuffs; Data Export (if offered in the author form) |
@@ -25,9 +27,9 @@ Public project URL and moderation status have not yet been verified.
 | Changelog | `curseforge/CHANGELOG-0.1.0.md` |
 | Required dependencies | None |
 
-No open-source license has been granted by this setup. Select the project license
-in the author dashboard; All Rights Reserved is available if retaining reuse rights.
-Do not label it MIT or another open-source license without choosing that deliberately.
+The author confirmed **MIT License** on 2026-10-18. The repository includes
+`LICENSE`, and future release ZIPs include it. Select MIT License in the
+CurseForge author form. The existing published v0.1.0 archive is not rewritten.
 
 The TOC records `## X-Curse-Project-ID: 1752634`. Repository variable
 `CURSEFORGE_PROJECT_ID` is configured as `1752634`. The author upload secret

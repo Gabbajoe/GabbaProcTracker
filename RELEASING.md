@@ -53,7 +53,9 @@ Author tokens: https://authors.curseforge.com/#/settings/api-tokens .
 The current TOC includes `## X-Curse-Project-ID: 1752634`. Record the actual
 public project URL once confirmed. The existing v0.1.0 tag and ZIP remain unchanged;
 the project ID is passed separately to the uploader, so that release can still
-be uploaded using the manual workflow. Future releases include the TOC metadata.
+be uploaded using the manual workflow. Future releases include the TOC metadata
+and the author-confirmed MIT `LICENSE` file. The published v0.1.0 ZIP predates
+that license-file addition; preserve the MIT notice when redistributing source.
 
 Run **Actions → Check CurseForge access**. This verifies token/API access and the
 exact Classic Era client version lookup. It does not establish project ownership.
