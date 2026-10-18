@@ -7,9 +7,9 @@
 ![Classic Era and Hardcore](https://img.shields.io/badge/WoW-Classic_Era_%26_Hardcore-22d3ee?style=flat-square)
 ![English and German](https://img.shields.io/badge/Languages-English_%2F_Deutsch-fbbf24?style=flat-square)
 ![No dependencies](https://img.shields.io/badge/Dependencies-none-34d399?style=flat-square)
-[![Latest release](https://img.shields.io/github/v/release/Gabbajoe/GabbaProcTracker?style=flat-square&color=22d3ee&label=Release)](https://github.com/Gabbajoe/GabbaProcTracker/releases)
+![Latest release](https://img.shields.io/github/v/release/Gabbajoe/GabbaProcTracker?style=flat-square&color=22d3ee&label=Release)
 
-**📦 [Downloads](https://github.com/Gabbajoe/GabbaProcTracker/releases) · 📚 [Guide & controls](https://github.com/Gabbajoe/GabbaProcTracker/blob/main/README.md) · 💬 [Ideas & issues](https://github.com/Gabbajoe/GabbaProcTracker/issues)**
+**📚 [Guide & controls](https://github.com/Gabbajoe/GabbaProcTracker/blob/main/README.md) · 💬 [Ideas & issues](https://github.com/Gabbajoe/GabbaProcTracker/issues)**
 
 GabbaProcTracker is a standalone proc tracker for **World of Warcraft Classic
 Era and Hardcore**. It counts supported weapon, shield, enchantment, trinket
