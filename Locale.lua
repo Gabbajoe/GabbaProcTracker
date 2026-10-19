@@ -1,5 +1,5 @@
 local _, ns = ...
-ns.VERSION = "0.1.0"
+ns.VERSION = "0.1.1"
 ns.locale = GetLocale and GetLocale() or "enUS"
 local english = {
     ["Linksklick: Fenster oeffnen/schliessen"] = "Left-click: toggle window",

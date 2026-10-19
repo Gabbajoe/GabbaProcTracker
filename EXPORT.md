@@ -63,3 +63,5 @@ later snapshot; keep it marked incomplete.
 The UUID is not a login credential, cryptographic hash or anonymization feature.
 Deleting the SavedVariables creates a new UUID; copying it copies the identity.
 Names and realms are included, so users should choose which files to share.
+
+Since 0.1.1, logout and `/reload` automatically refresh the local snapshot after finalizing combat. Manual export remains available. This does not enable uploads; the companion needs explicit per-character consent.

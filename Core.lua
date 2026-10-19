@@ -366,6 +366,9 @@ controller:SetScript("OnEvent", function(_, event, ...)
         BeginSegment(true)
     elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_LOGOUT" then
         tracker:Finish(GetTime())
+        -- WoW persists SavedVariables after PLAYER_LOGOUT (also /reload).
+        -- Keep a fresh local snapshot; uploading remains a separate app opt-in.
+        if event == "PLAYER_LOGOUT" then ns.SaveExport(tracker) end
         Refresh()
     elseif event == "GET_ITEM_INFO_RECEIVED" then
         Refresh()

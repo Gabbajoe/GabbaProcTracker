@@ -1,3 +1,8 @@
+# GabbaProcTracker 0.1.1
+
+- Automatically save a fresh local export on logout or /reload, after closing the combat segment.
+- Companion uploads remain a separate explicit opt-in; the addon never connects to a website.
+
 # GabbaProcTracker 0.1.0
 
 Initial public version for WoW Classic Era / Hardcore (interface 11509).

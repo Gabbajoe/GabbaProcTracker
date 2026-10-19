@@ -153,6 +153,17 @@ for _, context in ipairs({ "party", "raid" }) do
     assert(GabbaProcTrackerDB.counts[20007]["context_" .. context] == 1)
     assert(GabbaProcTrackerDB.stats[context][20007].seconds == 120)
 end
+local beforeLogout = GabbaProcTrackerDB.exportSequence
+inCombat = true
+area = "world"
+event("PLAYER_REGEN_DISABLED")
+now = now + 30
+event("PLAYER_LOGOUT")
+assert(GabbaProcTrackerDB.exportSequence == beforeLogout + 1)
+local logoutHistory = GabbaProcTrackerDB.export.history
+assert(logoutHistory[#logoutHistory].status == "complete")
+assert(logoutHistory[#logoutHistory].duration == 30)
+inCombat = false
 area = "pvp"
 event("COMBAT_LOG_EVENT_UNFILTERED")
 assert(GabbaProcTrackerDB.counts[20007].context_world == 1)
