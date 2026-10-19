@@ -155,7 +155,7 @@ for _, context in ipairs({ "party", "raid" }) do
 end
 local beforeLogout = GabbaProcTrackerDB.exportSequence
 inCombat = true
-area = "world"
+area = "none"
 event("PLAYER_REGEN_DISABLED")
 now = now + 30
 event("PLAYER_LOGOUT")

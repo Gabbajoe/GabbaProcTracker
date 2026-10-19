@@ -69,7 +69,7 @@ print("PASS: UUID persistence, independent characters, reset collection, snapsho
 
 for _, locale in ipairs({ "deDE", "enUS", "frFR" }) do
     local localized = loadAddon(locale)
-    assert(localized.VERSION == "0.1.0")
+    assert(localized.VERSION == ns.VERSION)
     assert(localized.L.Zaehler == (locale == "deDE" and "Zaehler" or "Counters"))
     GetSpellInfo = function() return locale == "deDE" and "Heilige Staerke" or "Holy Strength" end
     assert(localized.EffectName(20007, db) == GetSpellInfo())
