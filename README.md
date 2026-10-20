@@ -78,6 +78,7 @@ Upload succeeded; public availability/moderation approval has not been verified.
 | `/gpt counts` · `/gpt rates` · `/gpt history` | Open counters, combat rates or history |
 | `/gpt list` | Show the built-in catalog |
 | `/gpt export` | Save totals and history together to SavedVariables |
+| `/gpt autoexport [on\|off]` | Toggle snapshots on zone changes (off by default) |
 | `/gpt csv` · `/gpt csv history` | Open copyable CSV totals or history |
 | `/gpt reset confirm` | Reset measurements; keep custom effects and character UUID |
 

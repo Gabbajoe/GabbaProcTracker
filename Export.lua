@@ -166,3 +166,13 @@ function ns.SaveExport(tracker)
     db.export = snapshot
     return snapshot
 end
+
+-- A snapshot only changes SavedVariables in memory. WoW writes the file at
+-- logout/reload; zone events cannot force a disk flush or a companion upload.
+function ns.MaybeZoneExport(tracker, event, initialLogin, reloading)
+    if not tracker.db.autoExportOnZone then return false end
+    if event ~= "ZONE_CHANGED_NEW_AREA" and event ~= "PLAYER_ENTERING_WORLD" then return false end
+    if event == "PLAYER_ENTERING_WORLD" and (initialLogin or reloading) then return false end
+    ns.SaveExport(tracker)
+    return true
+end

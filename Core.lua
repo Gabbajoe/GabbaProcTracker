@@ -141,6 +141,7 @@ end
 
 local function Refresh()
     if not panel or not panel:IsShown() then return end
+    panel.autoExport:SetChecked(db.autoExportOnZone == true)
     panel.status:SetText(L["Aktuell: "] .. (labels[Context()] or L["Nicht erfasst"]) .. L["  |  Seit: "] .. db.since)
     local headers = mode == "history" and { L["Zeit / Effekt (Details: Maus)"], L["Gebietstyp"], L["Procs"], L["Kampfzeit"] } or { mode == "rates" and L["Effekt – Procs pro Kampfminute"] or L["Effekt (Zauber-ID)"], L["Open World"], L["Dungeon"], L["Raid"] }
     for index, header in ipairs(headers) do panel.headers[index]:SetText(header) end
@@ -240,7 +241,7 @@ local function CreatePanel()
     end
     local scroll = CreateFrame("ScrollFrame", nil, panel, "UIPanelScrollFrameTemplate")
     scroll:SetPoint("TOPLEFT", 16, -82)
-    scroll:SetPoint("BOTTOMRIGHT", -34, 60)
+    scroll:SetPoint("BOTTOMRIGHT", -34, 84)
     panel.content = CreateFrame("Frame", nil, scroll)
     panel.content:SetSize(530, 1)
     scroll:SetScrollChild(panel.content)
@@ -249,7 +250,17 @@ local function CreatePanel()
     panel.empty:SetPoint("TOPLEFT", 20, -90)
     panel.empty:SetText(L["Noch keine Eintraege. Hilfe: /gpt help"])
     panel.footer = panel:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    panel.footer:SetPoint("BOTTOMLEFT", 16, 38)
+    panel.footer:SetPoint("BOTTOMLEFT", 16, 62)
+    panel.autoExport = CreateFrame("CheckButton", nil, panel, "UICheckButtonTemplate")
+    panel.autoExport:SetSize(24, 24)
+    panel.autoExport:SetPoint("BOTTOMLEFT", 14, 32)
+    local autoLabel = panel.autoExport:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    autoLabel:SetPoint("LEFT", panel.autoExport, "RIGHT", 2, 0)
+    autoLabel:SetText(L["Export beim Gebietswechsel (Datei erst nach /reload oder Logout)"])
+    panel.autoExport:SetScript("OnClick", function(self)
+        db.autoExportOnZone = self:GetChecked() == true
+        Say(L["Auto-Export aktualisiert den Snapshot. WoW schreibt die Datei erst bei /reload oder Logout."])
+    end)
     for index, view in ipairs({ { "counts", L["Zaehler"] }, { "rates", L["Procs / Minute"] }, { "history", L["Verlauf"] }, { "catalog", L["Katalog"] } }) do
         local button = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
         button:SetSize(132, 22)
@@ -275,6 +286,19 @@ local function Command(message)
         end
         ns.SaveExport(tracker)
         Say(L["Export gespeichert. Jetzt /reload oder ausloggen, dann GabbaProcTracker.lua aus SavedVariables importieren."])
+    elseif command == "autoexport" then
+        if rest ~= "" and rest ~= "on" and rest ~= "off" then
+            Say("/gpt autoexport [on|off]")
+            return
+        end
+        if rest == "on" then db.autoExportOnZone = true
+        elseif rest == "off" then db.autoExportOnZone = false
+        else db.autoExportOnZone = not db.autoExportOnZone end
+        Refresh()
+        Say(db.autoExportOnZone and L["Auto-Export beim Gebietswechsel: an."] or L["Auto-Export beim Gebietswechsel: aus."])
+        if db.autoExportOnZone then
+            Say(L["Auto-Export aktualisiert den Snapshot. WoW schreibt die Datei erst bei /reload oder Logout."])
+        end
     elseif command == "minimap" then
         db.minimapHidden = not db.minimapHidden
         ns.RefreshMinimap()
@@ -320,6 +344,7 @@ local function Command(message)
         Say(L["/gpt export – CSV-Zusammenfassung | /gpt export history – CSV-Verlauf"])
         Say(L["/gpt list – Katalog aller eingebauten Effekte"])
         Say(L["/gpt minimap – Minimap-Button ein-/ausblenden"])
+        Say(L["/gpt autoexport [on|off] – Snapshot beim Gebietswechsel aktualisieren"])
         Say(L["Gruppen: Open World, Dungeons, Raids. Schlachtfelder/Arenen werden nicht erfasst."])
     end
 end
@@ -382,6 +407,7 @@ controller:SetScript("OnEvent", function(_, event, ...)
             BeginSegment()
         end
         ns.equipmentKey = before
+        ns.MaybeZoneExport(tracker, event, ...)
         Refresh()
     end
 end)

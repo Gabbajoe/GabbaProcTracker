@@ -75,3 +75,21 @@ for _, locale in ipairs({ "deDE", "enUS", "frFR" }) do
     assert(localized.EffectName(20007, db) == GetSpellInfo())
 end
 print("PASS: German/English localization, English fallback, names follow client language")
+
+local zoneDB = {}
+local zoneTracker = ns.NewTracker(zoneDB)
+assert(not ns.MaybeZoneExport(zoneTracker, "ZONE_CHANGED_NEW_AREA"))
+assert(zoneDB.export == nil) -- disabled unless explicitly enabled
+zoneDB.autoExportOnZone = true
+assert(not ns.MaybeZoneExport(zoneTracker, "PLAYER_ENTERING_WORLD", true, false))
+assert(not ns.MaybeZoneExport(zoneTracker, "PLAYER_ENTERING_WORLD", false, true))
+assert(not ns.MaybeZoneExport(zoneTracker, "PLAYER_EQUIPMENT_CHANGED"))
+assert(zoneDB.export == nil)
+assert(ns.MaybeZoneExport(zoneTracker, "ZONE_CHANGED_NEW_AREA"))
+assert(zoneDB.export.sequence == 1)
+assert(ns.MaybeZoneExport(zoneTracker, "PLAYER_ENTERING_WORLD", false, false))
+assert(zoneDB.export.sequence == 2)
+zoneDB.autoExportOnZone = false
+assert(not ns.MaybeZoneExport(zoneTracker, "ZONE_CHANGED_NEW_AREA"))
+assert(zoneDB.export.sequence == 2)
+print("PASS: opt-in zone snapshots, login/reload filtering and disabling")
