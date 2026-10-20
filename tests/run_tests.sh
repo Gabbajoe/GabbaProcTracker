@@ -8,3 +8,5 @@ for source in ./*.lua tests/*.lua; do "$LUAC" -p "$source"; done
 "$LUA" tests/run.lua enUS
 "$LUA" tests/export_test.lua
 "$LUA" tests/minimap_test.lua
+
+"$LUA" tests/telemetry_test.lua

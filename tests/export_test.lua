@@ -24,7 +24,7 @@ tracker:Begin("world", "Elwynn", 10, "now", function(e) return e.enchant == 1900
 tracker:Record(12, "SPELL_AURA_APPLIED", "me", "me", "me", 20007, "Crusader", "world")
 now = 40
 local first = ns.SaveExport(tracker)
-assert(first.schemaVersion == 1 and first.addonVersion == ns.VERSION)
+assert(first.schemaVersion == 2 and first.addonVersion == ns.VERSION)
 assert(first.characterId == identity and first.sequence == 1)
 assert(first.totals[1].spellId == 20007 and first.totals[1].procsPerMinute == 2)
 assert(first.totals[1].combatSeconds == 30 and first.totals[1].procs == 1)

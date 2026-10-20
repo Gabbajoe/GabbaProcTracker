@@ -2,6 +2,7 @@ local addonName, ns = ...
 local L = ns.L
 local controller = CreateFrame("Frame")
 local tracker, panel, db
+local fightId
 local items, enchants = {}, {}
 local learnedTalents = {}
 local swordEquipped = false
@@ -89,10 +90,11 @@ local function Equipped(effect)
 end
 
 local function BeginSegment(forceCombat)
+    if forceCombat or not fightId then db.nextFightId = (db.nextFightId or 0) + 1; fightId = db.nextFightId end
     tracker:Finish(GetTime())
     local context = Context()
     if context and (forceCombat or UnitAffectingCombat("player")) then
-        tracker:Begin(context, GetRealZoneText() or "?", GetTime(), date("%d.%m. %H:%M:%S"), Equipped)
+        tracker:Begin(context, GetRealZoneText() or "?", GetTime(), date("%d.%m. %H:%M:%S"), Equipped, fightId)
     end
 end
 
@@ -367,6 +369,9 @@ controller:SetScript("OnEvent", function(_, event, ...)
         controller:RegisterEvent("PLAYER_ENTERING_WORLD")
         controller:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
         controller:RegisterEvent("UNIT_INVENTORY_CHANGED")
+        controller:RegisterEvent("UNIT_AURA")
+        controller:RegisterEvent("UNIT_STATS")
+        controller:RegisterEvent("UNIT_ATTACK_SPEED")
         controller:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
         controller:RegisterEvent("PLAYER_REGEN_DISABLED")
         controller:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -383,14 +388,18 @@ controller:SetScript("OnEvent", function(_, event, ...)
         if UnitAffectingCombat("player") and (not tracker.session or tracker.session.context ~= context) then
             BeginSegment()
         end
+        ns.ObserveCombat(tracker, UnitGUID("player"), CombatLogGetCurrentEventInfo())
         local timestamp, subevent, _, source, _, _, _, dest, _, _, _, id, name = CombatLogGetCurrentEventInfo()
-        if tracker:Record(timestamp, subevent, source, dest, UnitGUID("player"), id, name, context, Equipped) then
+        if tracker:Record(timestamp, subevent, source, dest, UnitGUID("player"), id, name, context, Equipped, GetTime()) then
             Refresh()
         end
+    elseif event == "UNIT_AURA" or event == "UNIT_STATS" or event == "UNIT_ATTACK_SPEED" then
+        if (...) == "player" then ns.SampleTelemetry(tracker, GetTime()) end
     elseif event == "PLAYER_REGEN_DISABLED" then
         BeginSegment(true)
     elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_LOGOUT" then
         tracker:Finish(GetTime())
+        fightId = nil
         -- WoW persists SavedVariables after PLAYER_LOGOUT (also /reload).
         -- Keep a fresh local snapshot; uploading remains a separate app opt-in.
         if event == "PLAYER_LOGOUT" then ns.SaveExport(tracker) end

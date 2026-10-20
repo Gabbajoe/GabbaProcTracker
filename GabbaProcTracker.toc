@@ -3,13 +3,14 @@
 ## Notes-deDE: Proc-Zaehler fuer Waffen, Schilde, Verzauberungen, Trinkets und Talente: Open World, Dungeons und Raids.
 ## Notes: Weapon, enchantment, trinket and talent procs by Open World, dungeon and raid.
 ## Author: Nils
-## Version: 0.1.2
+## Version: 0.1.3
 ## X-Curse-Project-ID: 1752634
 ## X-License: MIT
 ## IconTexture: Interface\AddOns\GabbaProcTracker\Assets\Icon.tga
 ## SavedVariablesPerCharacter: GabbaProcTrackerDB
 
 Locale.lua
+Telemetry.lua
 Tracker.lua
 Catalog.lua
 Export.lua

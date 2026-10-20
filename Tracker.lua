@@ -56,14 +56,16 @@ function ns.NewTracker(db)
     for _, entry in ipairs(db.history) do entry.id = entry.id or segmentId() end
     local tracker = { db = db, recent = {} }
 
-    function tracker:Begin(context, zone, now, stamp, equipped)
+    function tracker:Begin(context, zone, now, stamp, equipped, fightId)
         if self.session then self:Finish(now) end
         local effects = {}
         for id, effect in pairs(ns.effects) do
             if equipped(effect) then effects[id] = true end
         end
         for id in pairs(self.db.custom) do effects[id] = true end
+        self.telemetryTargets = {}
         self.session = { id = segmentId(), startedAt = time and time() or nil, context = context, zone = zone, start = now, stamp = stamp, counts = {}, effects = effects }
+        if ns.NewTelemetry then self.session.telemetry = ns.NewTelemetry(fightId or self.session.id) end
     end
 
     function tracker:Finish(now)
@@ -96,7 +98,7 @@ function ns.NewTracker(db)
         return seconds > 0 and procs * 60 / seconds or nil, seconds, procs
     end
 
-    function tracker:Record(timestamp, event, source, destination, player, id, spellName, inside, equipped)
+    function tracker:Record(timestamp, event, source, destination, player, id, spellName, inside, equipped, now)
         if not player or not id then return false end
         id = ns.aliases[id] or id
         local effect = self.db.custom[id] or ns.effects[id]
@@ -134,6 +136,12 @@ function ns.NewTracker(db)
         row["context_" .. context] = (row["context_" .. context] or 0) + 1
         if self.session and self.session.effects[id] then
             self.session.counts[id] = (self.session.counts[id] or 0) + 1
+            local t = self.session.telemetry
+            if t then
+                if #t.procTimes < 1024 then
+                    t.procTimes[#t.procTimes + 1] = { spellId = id, atMs = math.floor(math.max(0, (now or GetTime()) - self.session.start) * 1000) }
+                else t.truncated = true end
+            end
         else
             local segment = { id = segmentId(), startedAt = time and time() or nil, outsideCombat = true, context = context, zone = "Ausserhalb eines Kampfsegments", stamp = date and date("%d.%m. %H:%M:%S") or "", duration = 0, counts = { [id] = 1 }, effects = {} }
             table.insert(self.db.history, segment)

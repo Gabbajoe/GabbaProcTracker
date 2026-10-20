@@ -9,7 +9,7 @@ Keys and numeric types are identical for German and English clients.
 
 | Field | Meaning |
 | --- | --- |
-| `schemaVersion` | Integer `1`; reject unsupported versions |
+| `schemaVersion` | Integer `2` (since 0.1.3); reject unsupported versions |
 | `addonVersion` | `0.1.0` |
 | `characterId` | Persistent locally generated UUID, retained across counter resets |
 | `collectionId` | UUID identifying one measurement series; changes after reset |
@@ -64,3 +64,13 @@ Deleting the SavedVariables creates a new UUID; copying it copies the identity.
 Names and realms are included, so users should choose which files to share.
 
 Since 0.1.1, logout and `/reload` automatically refresh the local snapshot after finalizing combat. Manual export remains available. This does not enable uploads; the companion needs explicit per-character consent.
+
+## Combat detail recording (0.1.3)
+
+`history` and `archiveHistory` entries can contain `telemetry.version = 1`. Historical entries without telemetry retain their meaning. Companion 0.1.3 reads SavedVariables schemas 1 and 2 and projects only the allowed numeric fields into upload schema 2.
+
+Telemetry contains `fightId` (collection-local; equipment splits share it), optional `classId`/`level`, `equipment` (slot/itemId/enchantId), `talents` (tab/index/rank), `samples` (atMs/stats/buffs), aggregated `attacks` (kind/spellId/hand/outcome/count), `procTimes` (spellId/atMs) and unique target count. Timestamps are milliseconds since **segment start**, not fight start. No target GUIDs, player names, item links or talent names are included.
+
+Limits: 32 stat/buff samples with at least one second between samples, 40 buffs per sample, 256 attack counter combinations, 1,024 proc timestamps and 500 counted targets per segment. `samplesTruncated` marks omitted context samples; `truncated` marks omitted combat details. Neither changes the original proc totals. Buff samples are snapshots, not exact aura uptime. Missing APIs produce absent values, not invented zeros. Hit modifiers are explicitly labeled modifiers, not an inferred hit probability against a target.
+
+The local archive continues to grow. The companion's existing 64 MiB file and 256 KiB packet limits remain; large raid archives require monitoring during this pre-beta test.

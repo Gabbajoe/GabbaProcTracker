@@ -206,3 +206,7 @@ progression Classic or Season of Discovery.
 [MIT](LICENSE) · Copyright © 2026 Nils (Gabbajoe).
 The MIT file and CurseForge metadata were added after the initial v0.1.0 archive;
 the published archive is preserved, and future packages include the license.
+
+### Raid-test detail recording (0.1.3)
+
+Version 0.1.3 adds numeric character/equipment/talent context, bounded stat/buff samples, attack outcomes and relative proc times per combat segment. Use **Companion 0.1.3 or newer** for the new SavedVariables export format. Old histories remain available, without retroactively inferred detail fields. See [EXPORT.md](EXPORT.md) for fields and limits. No target names/GUIDs are exported, and anonymous upload mode still excludes your character name and realm.

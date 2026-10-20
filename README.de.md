@@ -209,3 +209,7 @@ it; `/gpt minimap` toggles visibility. Position/visibility are saved per charact
 ## License / Lizenz
 
 [MIT License](LICENSE), confirmed by the author on 2026-10-18.
+
+### Detailaufzeichnung für den Raid-Test (0.1.3)
+
+Neu sind numerische Charakter-, Ausrüstungs- und Talentdaten, begrenzte Werte-/Buff-Samples, Angriffsergebnisse und relative Proc-Zeitpunkte pro Kampfsegment. Das neue Exportformat benötigt **Companion 0.1.3 oder neuer**. Alte Verläufe bleiben erhalten; fehlende Details werden nicht nachträglich geschätzt. Felder und Grenzen stehen in [EXPORT.md](EXPORT.md). Gegnernamen und GUIDs werden nicht exportiert. Bei anonymen Uploads bleiben Charaktername und Realm weiterhin ausgeschlossen.

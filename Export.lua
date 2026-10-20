@@ -130,7 +130,7 @@ function ns.SaveExport(tracker)
     ns.EnsureIdentity(db)
     db.exportSequence = (db.exportSequence or 0) + 1
     local snapshot = {
-        schemaVersion = 1, addonVersion = ns.VERSION,
+        schemaVersion = 2, addonVersion = ns.VERSION,
         characterId = db.characterId, collectionId = db.collectionId,
         sequence = db.exportSequence, exportedAt = time and time() or 0,
         locale = ns.locale, since = db.since,

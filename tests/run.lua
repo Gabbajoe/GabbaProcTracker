@@ -5,6 +5,7 @@ UnitName = function() return "Tester" end
 GetRealmName = function() return "TestRealm" end
 local ns = {}
 assert(loadfile(ROOT .. "Locale.lua"))("GabbaProcTracker", ns)
+assert(loadfile(ROOT .. "Telemetry.lua"))("GabbaProcTracker", ns)
 assert(loadfile(ROOT .. "Tracker.lua"))("GabbaProcTracker", ns)
 assert(loadfile(ROOT .. "Catalog.lua"))("GabbaProcTracker", ns)
 assert(loadfile(ROOT .. "Export.lua"))("GabbaProcTracker", ns)
