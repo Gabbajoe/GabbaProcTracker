@@ -51,14 +51,13 @@ snapshot can replace an active segment with its completed version. Archived
 snapshots can alternatively be stored by all three IDs including `sequence`.
 An older collection imported later must not replace a newer collection.
 
-The addon retains only the latest export. To archive every exported snapshot,
-the web app must save each imported file/snapshot. It can retain older segments
-not present in the next rolling history window, but must not infer that every
-segment was imported: gaps are possible. Totals cover the entire collection;
-history covers only retained details. Older addon versions may have already
-trimmed history without setting `historyTruncated`. An active segment which
-falls out of the window before the next import cannot be finalized from that
-later snapshot; keep it marked incomplete.
+Since 0.1.2, `export.archiveHistory` retains all available completed segments
+plus the current segment; `archiveVersion = 1` identifies this archive extension.
+`archiveTruncated` records known gaps inherited from older history. The legacy
+`history` view remains limited to 300 completed segments plus the current one.
+`GabbaProcTrackerDB.archivedExports` preserves collections before counter resets.
+The companion imports those collections as well as the current export. Previously
+trimmed segments cannot be recovered. Local archive size grows with play time.
 
 The UUID is not a login credential, cryptographic hash or anonymization feature.
 Deleting the SavedVariables creates a new UUID; copying it copies the identity.

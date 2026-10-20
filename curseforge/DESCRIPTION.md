@@ -22,7 +22,7 @@ The interface automatically uses **German or English** based on your WoW client.
 - **Procs per combat minute**, measured while the relevant equipment or talent
   is eligible. Zero-proc combat segments are included.
 - A history of the **last 300 completed combat segments**, including zone,
-  duration and proc counts. Cumulative totals remain available beyond that limit.
+  duration and proc counts. A separate archive retains completed fights beyond that view for companion uploads.
 - **93 built-in effect groups**, plus custom proc spell IDs.
 - A round, draggable **minimap button** with a matching addon icon.
 - Per-character saved data and a persistent **character UUID**.
@@ -57,7 +57,7 @@ After exporting, use **`/reload` or log out** so WoW writes the SavedVariables f
 
 The snapshot contains cumulative totals and retained history. Its character UUID,
 collection ID and export sequence allow an external importer to recognize repeat
-imports. No web app or automatic upload is included. `/gpt csv` and
+imports. Optional companion uploads are available through [gabbaproc.kellerkind.info](https://gabbaproc.kellerkind.info). `/gpt csv` and
 `/gpt csv history` provide copyable CSV as an alternative.
 
 ## 📊 Understanding the numbers
@@ -69,7 +69,7 @@ Battlegrounds and arenas are excluded; buildings and caves outside instances
 count as Open World. Only your own supported triggers are counted.
 
 Classic Era / Hardcore only. Retail, progression Classic and Season of Discovery
-are not supported targets. Version 0.1.0 has automated logic and packaging tests;
+are not supported targets. Version 0.1.2 has automated logic and packaging tests;
 real-client visual and gameplay checks are still pending.
 
 ## 🇩🇪 Deutsch
@@ -82,8 +82,12 @@ ein Verlauf der letzten 300 abgeschlossenen Kampfsegmente und ein Katalog mit
 **Minimap:** Linksklick oeffnet das Fenster, Rechtsklick speichert den Export,
 Ziehen verschiebt den Button. `/gpt minimap` blendet ihn aus oder wieder ein.
 Nach einem Export `/reload` ausfuehren oder ausloggen. Die SavedVariables-Datei
-enthaelt dann einen Snapshot fuer eine externe Auswertung. Eine Web-App ist
-noch nicht enthalten. Die Charakter-UUID bleibt auch nach einem Zaehler-Reset erhalten.
+enthaelt dann einen Snapshot fuer eine externe Auswertung. Der optionale Companion auf [gabbaproc.kellerkind.info](https://gabbaproc.kellerkind.info) kann ausgewaehlte Daten hochladen. Die Charakter-UUID bleibt auch nach einem Zaehler-Reset erhalten.
 
 Eine hoehere Proc-Rate ist eine Beobachtung und kein Beweis fuer unterschiedliche
 Proc-Chancen zwischen Open World, Dungeons und Raids.
+
+Since 0.1.2, `/gpt autoexport on` optionally refreshes snapshots on zone changes.
+WoW still writes files only on reload/logout. Previous collections survive counter
+resets in the archive. Older trimmed history cannot be recovered, and archive
+size grows with play time.

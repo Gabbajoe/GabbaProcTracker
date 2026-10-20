@@ -1,6 +1,6 @@
 # Proc-Katalog – Classic Era / Hardcore
 
-Stand: 18.10.2026, Version 0.1.0. **93 Effektgruppen**. Im Spiel: `/gpt list`.
+Stand: 20.10.2026, Version 0.1.2. **93 Effektgruppen**. Im Spiel: `/gpt list`.
 Die Tabelle ist aus den tatsaechlich geladenen Definitionen erzeugt.
 Englische Gegenstandsnamen dienen bei den recherchierten Ergaenzungen als
 sprachunabhaengige Referenz; die Erkennung erfolgt ueber IDs.

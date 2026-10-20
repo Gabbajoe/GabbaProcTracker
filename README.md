@@ -139,9 +139,12 @@ stays unchanged until the next export, even after a counter reset. A reset start
 a new collection but keeps the character UUID. Deleting SavedVariables creates
 a new identity; copying the file copies it. Character name and realm are included.
 
-**No web app or automatic upload is included.** The machine-readable format is
-documented in [EXPORT.md](EXPORT.md). Detailed history is limited to 300 completed
-segments plus the current segment; totals cover the entire collection.
+**The addon does not upload data itself.** Use the optional companion from
+[gabbaproc.kellerkind.info](https://gabbaproc.kellerkind.info) to upload selected
+characters. The format is documented in [EXPORT.md](EXPORT.md). Since 0.1.2,
+completed fights are retained in a separate archive beyond the 300-entry history
+view, including collections preserved through counter resets. Previously trimmed
+history cannot be recovered; the local archive grows as you play.
 
 For CSV, use `/gpt csv` or `/gpt csv history`, copy with Ctrl+A / Ctrl+C, and save
 as UTF-8. Separator: semicolon; decimal separator: period. A missing rate means no
