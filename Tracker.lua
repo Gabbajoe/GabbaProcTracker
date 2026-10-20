@@ -37,16 +37,22 @@ function ns.NewTracker(db)
     db.counts = db.counts or {}
     db.custom = db.custom or {}
     db.history = db.history or {}
+    if not db.completedArchive then
+        db.completedArchive = {}
+        for _, entry in ipairs(db.history) do db.completedArchive[#db.completedArchive + 1] = entry end
+        db.archiveTruncated = db.historyTruncated or false
+    end
     db.stats = db.stats or {}
     -- Assign stable segment IDs to old histories once, then preserve them.
     db.nextSegmentId = db.nextSegmentId or 0
-    for _, entry in ipairs(db.history) do
+    for _, entry in ipairs(db.completedArchive) do
         db.nextSegmentId = math.max(db.nextSegmentId, entry.id or 0)
     end
     local function segmentId()
         db.nextSegmentId = db.nextSegmentId + 1
         return db.nextSegmentId
     end
+    for _, entry in ipairs(db.completedArchive) do entry.id = entry.id or segmentId() end
     for _, entry in ipairs(db.history) do entry.id = entry.id or segmentId() end
     local tracker = { db = db, recent = {} }
 
@@ -75,6 +81,7 @@ function ns.NewTracker(db)
             row.procs = row.procs + (session.counts[id] or 0)
         end
         table.insert(self.db.history, session)
+        table.insert(self.db.completedArchive, session)
         if #self.db.history > 300 then table.remove(self.db.history, 1); self.db.historyTruncated = true end
     end
 
@@ -128,19 +135,24 @@ function ns.NewTracker(db)
         if self.session and self.session.effects[id] then
             self.session.counts[id] = (self.session.counts[id] or 0) + 1
         else
-            table.insert(self.db.history, { id = segmentId(), startedAt = time and time() or nil, outsideCombat = true, context = context, zone = "Ausserhalb eines Kampfsegments", stamp = date and date("%d.%m. %H:%M:%S") or "", duration = 0, counts = { [id] = 1 }, effects = {} })
+            local segment = { id = segmentId(), startedAt = time and time() or nil, outsideCombat = true, context = context, zone = "Ausserhalb eines Kampfsegments", stamp = date and date("%d.%m. %H:%M:%S") or "", duration = 0, counts = { [id] = 1 }, effects = {} }
+            table.insert(self.db.history, segment)
+            table.insert(self.db.completedArchive, segment)
             if #self.db.history > 300 then table.remove(self.db.history, 1); self.db.historyTruncated = true end
         end
         return true
     end
 
     function tracker:Reset()
+        if ns.PreserveCollection then ns.PreserveCollection(self) end
         self.db.collectionId = nil
         self.db.historyTruncated = false
         self.db.nextSegmentId = 0
         self.db.counts = {}
         self.db.stats = {}
         self.db.history = {}
+        self.db.completedArchive = {}
+        self.db.archiveTruncated = false
         self.session = nil
         self.recent = {}
     end

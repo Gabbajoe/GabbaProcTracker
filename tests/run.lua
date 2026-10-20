@@ -1,5 +1,8 @@
 local ROOT = (arg[0]:match("^(.*[/\\])") or "") .. "../"
 GetLocale = function() return arg[1] or "deDE" end
+GetTime = function() return 1000 end
+UnitName = function() return "Tester" end
+GetRealmName = function() return "TestRealm" end
 local ns = {}
 assert(loadfile(ROOT .. "Locale.lua"))("GabbaProcTracker", ns)
 assert(loadfile(ROOT .. "Tracker.lua"))("GabbaProcTracker", ns)

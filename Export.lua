@@ -137,7 +137,8 @@ function ns.SaveExport(tracker)
         character = { name = UnitName("player"), realm = GetRealmName() },
         groups = { "world", "party", "raid" },
         historyLimit = 300, historyTruncated = db.historyTruncated or false,
-        totals = {}, history = {},
+        totals = {}, history = {}, archiveHistory = {},
+        archiveVersion = 1, archiveTruncated = db.archiveTruncated or false,
     }
     local ids = {}
     for id in pairs(db.counts) do ids[id] = true end
@@ -154,17 +155,34 @@ function ns.SaveExport(tracker)
             }
         end
     end
-    local function addSegment(entry, active)
+    local function addSegment(entry, active, destination)
         local segment = copy(entry)
         segment.duration = active and math.max(0, now - entry.start) or entry.duration
         segment.start = nil -- GetTime is client uptime, never a portable timestamp.
         segment.status = active and "active" or "complete"
-        snapshot.history[#snapshot.history + 1] = segment
+        destination[#destination + 1] = segment
     end
-    for _, entry in ipairs(db.history) do addSegment(entry, false) end
-    if tracker.session then addSegment(tracker.session, true) end
+    for _, entry in ipairs(db.history) do addSegment(entry, false, snapshot.history) end
+    for _, entry in ipairs(db.completedArchive or db.history) do addSegment(entry, false, snapshot.archiveHistory) end
+    if tracker.session then
+        addSegment(tracker.session, true, snapshot.history)
+        addSegment(tracker.session, true, snapshot.archiveHistory)
+    end
     db.export = snapshot
     return snapshot
+end
+
+-- Keep reset collections available for the companion, even if it was offline.
+-- Archives do not recursively embed previous archives.
+function ns.PreserveCollection(tracker)
+    local db = tracker.db
+    if not next(db.counts) and #(db.completedArchive or db.history) == 0 and not tracker.session then return end
+    local previous = db.export
+    if tracker.session then tracker:Finish(GetTime()) end
+    local snapshot = ns.SaveExport(tracker)
+    db.archivedExports = db.archivedExports or {}
+    db.archivedExports[#db.archivedExports + 1] = snapshot
+    db.export = previous -- reset does not replace the last explicit export
 end
 
 -- A snapshot only changes SavedVariables in memory. WoW writes the file at
