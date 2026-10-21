@@ -1,3 +1,9 @@
+# GabbaProcTracker 0.1.4 — Window behavior and clearer guidance
+
+- Match the Gabba window layer: MEDIUM strata, raised on click. Escape continues to close the tracker through WoW’s normal window handling.
+- Rewrite the addon description around tracking, persistent archives and optional community uploads; explain the existing auto-export checkbox first.
+- No change to stored measurements or export schema.
+
 # GabbaProcTracker 0.1.3 — Raid-test measurements
 
 - Record numeric character context per combat segment: class, level, equipped item/enchantment IDs, talent ranks, available stats and sampled buffs.

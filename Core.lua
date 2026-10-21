@@ -209,6 +209,8 @@ end
 
 local function CreatePanel()
     panel = CreateFrame("Frame", "GabbaProcTrackerFrame", UIParent, "BasicFrameTemplateWithInset")
+    panel:SetFrameStrata("MEDIUM")
+    panel:SetToplevel(true)
     panel:SetSize(590, 380)
     panel:SetClampedToScreen(true)
     panel:SetMovable(true)
