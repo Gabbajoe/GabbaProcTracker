@@ -29,19 +29,19 @@ assert(first.characterId == identity and first.sequence == 1)
 assert(first.totals[1].spellId == 20007 and first.totals[1].procsPerMinute == 2)
 assert(first.totals[1].combatSeconds == 30 and first.totals[1].procs == 1)
 assert(first.totals[2].procsPerMinute == nil and first.totals[2].combatSeconds == 0)
-assert(first.history[1].status == "active" and first.history[1].start == nil)
-assert(first.history[1].startedAt == time())
+assert(first.archiveHistory[1].status == "active" and first.archiveHistory[1].start == nil)
+assert(first.archiveHistory[1].startedAt == time())
 assert(tracker.session.start == 10 and #db.history == 0)
 tracker:Record(45, "SPELL_AURA_REFRESH", "me", "me", "me", 20007, "Crusader", "world")
-assert(first.history[1].counts[20007] == 1) -- deep snapshot, not live aliases
+assert(first.archiveHistory[1].counts[20007] == 1) -- deep snapshot, not live aliases
 now = 70
 tracker:Finish(now)
 local second = ns.SaveExport(tracker)
 assert(second.sequence == 2 and second.characterId == identity)
 assert(second.collectionId == first.collectionId)
-assert(second.history[1].id == first.history[1].id and second.history[1].status == "complete")
+assert(second.archiveHistory[1].id == first.archiveHistory[1].id and second.archiveHistory[1].status == "complete")
 assert(second.totals[1].procs == 2 and second.totals[1].combatSeconds == 60)
-assert(db.export == second and first.history[1].duration == 30)
+assert(db.export == second and first.archiveHistory[1].duration == 30)
 local reloaded = ns.NewTracker(db)
 ns.EnsureIdentity(db)
 assert(db.characterId == identity and db.collectionId == first.collectionId)
@@ -49,7 +49,7 @@ reloaded:Reset()
 assert(db.characterId == identity and db.export == second)
 assert(#db.archivedExports == 1)
 local archived = db.archivedExports[1]
-assert(archived.collectionId == second.collectionId and archived.history[1].status == "complete")
+assert(archived.collectionId == second.collectionId and archived.archiveHistory[1].status == "complete")
 assert(archived.archiveHistory[1].counts[20007] == 2)
 local third = ns.SaveExport(reloaded)
 assert(third.collectionId ~= second.collectionId and third.characterId == identity)
@@ -59,8 +59,8 @@ for i = 1, 305 do
     reloaded:Finish(i + 1)
 end
 local fourth = ns.SaveExport(reloaded)
-assert(fourth.historyTruncated and #fourth.history == 300)
-assert(fourth.history[1].id == 6 and fourth.history[300].id == 305)
+assert(fourth.historyTruncated and #fourth.history == 0)
+assert(#db.history == 300 and db.history[1].id == 6)
 assert(#fourth.archiveHistory == 305 and not fourth.archiveTruncated)
 assert(fourth.archiveHistory[1].id == 1 and fourth.archiveHistory[305].id == 305)
 assert(fourth.totals[2].combatSeconds == 305 and fourth.totals[2].procs == 0)
@@ -105,3 +105,21 @@ zoneDB.autoExportOnZone = false
 assert(not ns.MaybeZoneExport(zoneTracker, "ZONE_CHANGED_NEW_AREA"))
 assert(zoneDB.export.sequence == 2)
 print("PASS: opt-in zone snapshots, login/reload filtering and disabling")
+
+local bounded = ns.NewTracker({})
+local previousBudget = ns.ARCHIVE_UNITS
+ns.ARCHIVE_UNITS = 100
+for i=1,20 do bounded:Begin("world", "test", i, "", function() return false end); bounded:Finish(i+1) end
+assert(bounded.db.archiveTruncated and #bounded.db.completedArchive < 20)
+local retained = #bounded.db.completedArchive
+bounded:Reset()
+assert(#bounded.db.archivedExports[1].archiveHistory == retained)
+assert(bounded.archiveUnits > 0) -- reset cannot bypass the detail budget
+bounded:ClearArchive()
+assert(#bounded.db.archivedExports == 0 and bounded.archiveUnits == 0)
+ns.ARCHIVE_UNITS = previousBudget
+local deferred = ns.NewTracker({autoExportOnZone=true})
+deferred:Begin("world", "test", 1, "", function() return false end)
+assert(not ns.MaybeZoneExport(deferred, "ZONE_CHANGED_NEW_AREA"))
+assert(deferred.pendingExport and not deferred.db.export)
+print("PASS: archive budget across reset, explicit cleanup, combat export deferral")

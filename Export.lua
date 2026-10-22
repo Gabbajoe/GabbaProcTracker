@@ -156,16 +156,14 @@ function ns.SaveExport(tracker)
         end
     end
     local function addSegment(entry, active, destination)
-        local segment = copy(entry)
+        local segment = active and copy(entry) or entry
         segment.duration = active and math.max(0, now - entry.start) or entry.duration
         segment.start = nil -- GetTime is client uptime, never a portable timestamp.
         segment.status = active and "active" or "complete"
         destination[#destination + 1] = segment
     end
-    for _, entry in ipairs(db.history) do addSegment(entry, false, snapshot.history) end
     for _, entry in ipairs(db.completedArchive or db.history) do addSegment(entry, false, snapshot.archiveHistory) end
     if tracker.session then
-        addSegment(tracker.session, true, snapshot.history)
         addSegment(tracker.session, true, snapshot.archiveHistory)
     end
     db.export = snapshot
@@ -177,6 +175,10 @@ end
 function ns.PreserveCollection(tracker)
     local db = tracker.db
     if not next(db.counts) and #(db.completedArchive or db.history) == 0 and not tracker.session then return end
+    if #(db.archivedExports or {}) >= 100 then
+        ns.ArchiveWarning()
+        return false
+    end
     local previous = db.export
     if tracker.session then tracker:Finish(GetTime()) end
     local snapshot = ns.SaveExport(tracker)
@@ -191,6 +193,7 @@ function ns.MaybeZoneExport(tracker, event, initialLogin, reloading)
     if not tracker.db.autoExportOnZone then return false end
     if event ~= "ZONE_CHANGED_NEW_AREA" and event ~= "PLAYER_ENTERING_WORLD" then return false end
     if event == "PLAYER_ENTERING_WORLD" and (initialLogin or reloading) then return false end
+    if tracker.session then tracker.pendingExport = true; return false end
     ns.SaveExport(tracker)
     return true
 end

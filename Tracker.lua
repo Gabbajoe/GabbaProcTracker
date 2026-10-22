@@ -33,6 +33,22 @@ ns.effects = {
 -- Improved Shadow Bolt ranks 1-4 use separate debuff IDs; share one counter.
 ns.aliases = { [17794] = 17800, [17797] = 17800, [17798] = 17800, [17799] = 17800 }
 
+-- A conservative structural budget bounds detailed archives across counter resets.
+-- At the limit, preserve existing data and pause new details; totals keep counting.
+ns.ARCHIVE_UNITS = 200000
+local function units(value)
+    if type(value) ~= "table" then return 1 end
+    local n = 1
+    for k, v in pairs(value) do n = n + 1 + units(v) end
+    return n
+end
+function ns.ArchiveWarning()
+    if DEFAULT_CHAT_FRAME then
+        DEFAULT_CHAT_FRAME:AddMessage(ns.locale == "deDE" and
+            "GabbaProc: Detailarchiv voll. Neue Kampfdetails pausieren; Zähler laufen weiter. Erst exportieren und Upload prüfen, dann /gpt archive clear confirm."
+            or "GabbaProc: Detail archive full. New fight details paused; counters continue. Export and verify your upload, then /gpt archive clear confirm.")
+    end
+end
 function ns.NewTracker(db)
     db.counts = db.counts or {}
     db.custom = db.custom or {}
@@ -55,6 +71,23 @@ function ns.NewTracker(db)
     for _, entry in ipairs(db.completedArchive) do entry.id = entry.id or segmentId() end
     for _, entry in ipairs(db.history) do entry.id = entry.id or segmentId() end
     local tracker = { db = db, recent = {} }
+    tracker.archiveUnits = units(db.completedArchive) + units(db.archivedExports)
+    function tracker:Archive(entry)
+        local size = units(entry)
+        if self.archiveUnits + size > ns.ARCHIVE_UNITS then
+            self.db.archiveTruncated = true
+            if not self.archiveWarned then ns.ArchiveWarning(); self.archiveWarned = true end
+            return
+        end
+        self.archiveUnits = self.archiveUnits + size
+        table.insert(self.db.completedArchive, entry)
+    end
+    function tracker:ClearArchive()
+        self.db.completedArchive, self.db.archivedExports, self.db.history = {}, {}, {}
+        self.db.export = nil
+        self.db.archiveTruncated, self.db.historyTruncated = true, true
+        self.archiveUnits, self.archiveWarned = 0, false
+    end
 
     function tracker:Begin(context, zone, now, stamp, equipped, fightId)
         if self.session then self:Finish(now) end
@@ -63,7 +96,7 @@ function ns.NewTracker(db)
             if equipped(effect) then effects[id] = true end
         end
         for id in pairs(self.db.custom) do effects[id] = true end
-        self.telemetryTargets = {}
+        self.telemetryTargets, self.telemetryAttackIndex = {}, {}
         self.session = { id = segmentId(), startedAt = time and time() or nil, context = context, zone = zone, start = now, stamp = stamp, counts = {}, effects = effects }
         if ns.NewTelemetry then self.session.telemetry = ns.NewTelemetry(fightId or self.session.id) end
     end
@@ -71,9 +104,12 @@ function ns.NewTracker(db)
     function tracker:Finish(now)
         local session = self.session
         if not session then return end
+        if ns.SampleTelemetry then ns.SampleTelemetry(self, now, true) end
+        self.telemetrySamplePending = nil
         self.session = nil
         session.duration = math.max(0, now - session.start)
         session.start = nil
+        session.status = "complete"
         local stats = self.db.stats[session.context] or {}
         self.db.stats[session.context] = stats
         for id in pairs(session.effects) do
@@ -83,7 +119,7 @@ function ns.NewTracker(db)
             row.procs = row.procs + (session.counts[id] or 0)
         end
         table.insert(self.db.history, session)
-        table.insert(self.db.completedArchive, session)
+        self:Archive(session)
         if #self.db.history > 300 then table.remove(self.db.history, 1); self.db.historyTruncated = true end
     end
 
@@ -143,16 +179,16 @@ function ns.NewTracker(db)
                 else t.truncated = true end
             end
         else
-            local segment = { id = segmentId(), startedAt = time and time() or nil, outsideCombat = true, context = context, zone = "Ausserhalb eines Kampfsegments", stamp = date and date("%d.%m. %H:%M:%S") or "", duration = 0, counts = { [id] = 1 }, effects = {} }
+            local segment = { status = "complete", id = segmentId(), startedAt = time and time() or nil, outsideCombat = true, context = context, zone = "Ausserhalb eines Kampfsegments", stamp = date and date("%d.%m. %H:%M:%S") or "", duration = 0, counts = { [id] = 1 }, effects = {} }
             table.insert(self.db.history, segment)
-            table.insert(self.db.completedArchive, segment)
+            self:Archive(segment)
             if #self.db.history > 300 then table.remove(self.db.history, 1); self.db.historyTruncated = true end
         end
         return true
     end
 
     function tracker:Reset()
-        if ns.PreserveCollection then ns.PreserveCollection(self) end
+        if ns.PreserveCollection and ns.PreserveCollection(self) == false then return false end
         self.db.collectionId = nil
         self.db.historyTruncated = false
         self.db.nextSegmentId = 0

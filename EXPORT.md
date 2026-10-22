@@ -74,3 +74,20 @@ Telemetry contains `fightId` (collection-local; equipment splits share it), opti
 Limits: 32 stat/buff samples with at least one second between samples, 40 buffs per sample, 256 attack counter combinations, 1,024 proc timestamps and 500 counted targets per segment. `samplesTruncated` marks omitted context samples; `truncated` marks omitted combat details. Neither changes the original proc totals. Buff samples are snapshots, not exact aura uptime. Missing APIs produce absent values, not invented zeros. Hit modifiers are explicitly labeled modifiers, not an inferred hit probability against a target.
 
 The local archive continues to grow. The companion's existing 64 MiB file and 256 KiB packet limits remain; large raid archives require monitoring during this pre-beta test.
+
+
+### Detail archive capacity (0.1.5)
+
+Completed fights are immutable and reused in memory by exports. The export's
+`archiveHistory` is authoritative; `history` is empty to avoid serializing the
+same export details twice. Active fights remain independent snapshots.
+
+A 200,000-unit structural budget covers current and reset archives. At capacity,
+new archive details pause with a chat and window warning; cumulative totals keep
+counting and existing details remain available. A reset does not bypass this
+budget. At 100 archived collections a further reset is refused until cleanup.
+Export, `/reload`, and verify successful upload before explicitly running
+`/gpt archive clear confirm`. This clears local detail/history/export data only;
+it keeps counters, stable segment IDs and server contributions. `archiveTruncated`
+marks resulting gaps. Existing oversized collections are retained for export,
+not silently deleted. Automatic zone exports wait until combat ends.

@@ -1,3 +1,11 @@
+## 0.1.5
+
+- Reduced combat-event overhead and reused immutable completed fights during export.
+- Bounded detailed archives across counter resets. A visible warning pauses new archive details at capacity; totals continue and existing details are retained.
+- Added `/gpt archive clear confirm` to explicitly clear local details after verifying an upload. This does not delete server data or cumulative counters.
+- Deferred automatic zone exports during combat and throttled combat-driven UI refreshes.
+- Spread statistics samples over longer fights and reserve a final sample for combat end.
+
 # GabbaProcTracker 0.1.4 — Window behavior and clearer guidance
 
 - Match the Gabba window layer: MEDIUM strata, raised on click. Escape continues to close the tracker through WoW’s normal window handling.

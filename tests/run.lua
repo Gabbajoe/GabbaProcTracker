@@ -164,7 +164,7 @@ event("PLAYER_REGEN_DISABLED")
 now = now + 30
 event("PLAYER_LOGOUT")
 assert(GabbaProcTrackerDB.exportSequence == beforeLogout + 1)
-local logoutHistory = GabbaProcTrackerDB.export.history
+local logoutHistory = GabbaProcTrackerDB.export.archiveHistory
 assert(logoutHistory[#logoutHistory].status == "complete")
 assert(logoutHistory[#logoutHistory].duration == 30)
 inCombat = false

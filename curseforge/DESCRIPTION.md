@@ -85,7 +85,7 @@ is not proof of different proc chances between environments.
 
 Equipment changes can split one fight into several segments. Battlegrounds and
 arenas are excluded. Tracking targets **Classic Era and Hardcore**; other WoW
-editions are not supported. The local archive grows as you play. Data discarded
+editions are not supported. The local detail archive has a memory budget. At capacity, new details pause with a warning; counters continue and existing data is retained. After verifying an upload, `/gpt archive clear confirm` frees local details. Data discarded
 by older addon versions cannot be reconstructed.
 
 ## 🇩🇪 Deutsch

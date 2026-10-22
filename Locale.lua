@@ -1,5 +1,5 @@
 local _, ns = ...
-ns.VERSION = "0.1.4"
+ns.VERSION = "0.1.5"
 ns.locale = GetLocale and GetLocale() or "enUS"
 local english = {
     ["Export beim Gebietswechsel (Datei erst nach /reload oder Logout)"] = "Export on zone change (file written on /reload or logout)",

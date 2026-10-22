@@ -144,7 +144,7 @@ a new identity; copying the file copies it. Character name and realm are include
 characters. The format is documented in [EXPORT.md](EXPORT.md). Since 0.1.2,
 completed fights are retained in a separate archive beyond the 300-entry history
 view, including collections preserved through counter resets. Previously trimmed
-history cannot be recovered; the local archive grows as you play.
+history cannot be recovered; the local detail archive now pauses at its structural budget, with a visible warning. Existing details remain available and counters continue. After a verified upload, use `/gpt archive clear confirm` to free local details.
 
 For CSV, use `/gpt csv` or `/gpt csv history`, copy with Ctrl+A / Ctrl+C, and save
 as UTF-8. Separator: semicolon; decimal separator: period. A missing rate means no

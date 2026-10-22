@@ -59,15 +59,23 @@ function ns.NewTelemetry(fightId)
     return { version = 1, fightId = fightId, classId = classId, level = call(UnitLevel, "player"), equipment = equipment, talents = talents,
         samples = { { atMs = 0, stats = stats, buffs = buffs } }, attacks = {}, procTimes = {}, targets = 0, truncated = false, samplesTruncated = false }
 end
-function ns.SampleTelemetry(tracker, now)
+function ns.SampleTelemetry(tracker, now, final)
     local s = tracker.session
     if not s or not s.telemetry then return end
     local t = s.telemetry
     local at = math.floor(math.max(0, now - s.start) * 1000)
-    if #t.samples >= 32 or at - t.samples[#t.samples].atMs < 1000 then t.samplesTruncated = true; return end
+    -- Reserve the last slot for the end of the fight; spread interim samples
+    -- further apart as fights get longer. Never rewrite already exported samples.
+    local interval = math.max(1000, math.floor(at / 8))
+    if #t.samples >= (final and 32 or 31) then t.samplesTruncated = true; tracker.telemetrySamplePending = nil; return end
+    if not final and at - t.samples[#t.samples].atMs < interval then
+        t.samplesTruncated = true; tracker.telemetrySamplePending = true; return
+    end
+    tracker.telemetrySamplePending = nil
     local stats, buffs = ns.MeasureStats()
     t.samples[#t.samples + 1] = { atMs = at, stats = stats, buffs = buffs }
 end
+local allowed = { hit=true, crit=true, glancing=true, cast=true, MISS=true, DODGE=true, PARRY=true, BLOCK=true, RESIST=true, IMMUNE=true, EVADE=true, DEFLECT=true, ABSORB=true, REFLECT=true }
 function ns.ObserveCombat(tracker, player, ...)
     local s = tracker.session
     if not s or not s.telemetry then return end
@@ -89,15 +97,17 @@ function ns.ObserveCombat(tracker, player, ...)
         spell, outcome = select(12, ...), select(15, ...)
     elseif event == "SPELL_CAST_SUCCESS" then kind, spell, outcome = "cast", select(12, ...), "cast"
     else return end
-    local allowed = { hit=true, crit=true, glancing=true, cast=true, MISS=true, DODGE=true, PARRY=true, BLOCK=true, RESIST=true, IMMUNE=true, EVADE=true, DEFLECT=true, ABSORB=true, REFLECT=true }
     if not allowed[outcome] then outcome = "other" end
     tracker.telemetryTargets = tracker.telemetryTargets or {}
     if kind ~= "cast" and dest and not tracker.telemetryTargets[dest] then
         if t.targets < 500 then tracker.telemetryTargets[dest] = true; t.targets = t.targets + 1 else t.truncated = true end
     end
-    for _, row in ipairs(t.attacks) do
-        if row.kind == kind and row.spellId == spell and row.hand == hand and row.outcome == outcome then row.count = row.count + 1; return end
-    end
+    tracker.telemetryAttackIndex = tracker.telemetryAttackIndex or {}
+    local key = kind .. ":" .. tostring(spell) .. ":" .. hand .. ":" .. outcome
+    local row = tracker.telemetryAttackIndex[key]
+    if row then row.count = row.count + 1; return end
     if #t.attacks >= 256 then t.truncated = true; return end
-    t.attacks[#t.attacks + 1] = { kind = kind, spellId = spell, hand = hand, outcome = outcome, count = 1 }
+    local row = { kind = kind, spellId = spell, hand = hand, outcome = outcome, count = 1 }
+    t.attacks[#t.attacks + 1] = row
+    tracker.telemetryAttackIndex[key] = row
 end

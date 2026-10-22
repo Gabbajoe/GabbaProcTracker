@@ -145,6 +145,7 @@ local function Refresh()
     if not panel or not panel:IsShown() then return end
     panel.autoExport:SetChecked(db.autoExportOnZone == true)
     panel.status:SetText(L["Aktuell: "] .. (labels[Context()] or L["Nicht erfasst"]) .. L["  |  Seit: "] .. db.since)
+    if tracker.archiveWarned then panel.status:SetText(ns.locale == "deDE" and "Detailarchiv voll — /gpt archive für Hinweise" or "Detail archive full — /gpt archive for instructions") end
     local headers = mode == "history" and { L["Zeit / Effekt (Details: Maus)"], L["Gebietstyp"], L["Procs"], L["Kampfzeit"] } or { mode == "rates" and L["Effekt – Procs pro Kampfminute"] or L["Effekt (Zauber-ID)"], L["Open World"], L["Dungeon"], L["Raid"] }
     for index, header in ipairs(headers) do panel.headers[index]:SetText(header) end
     local rows = Rows()
@@ -290,6 +291,13 @@ local function Command(message)
         end
         ns.SaveExport(tracker)
         Say(L["Export gespeichert. Jetzt /reload oder ausloggen, dann GabbaProcTracker.lua aus SavedVariables importieren."])
+    elseif command == "archive" then
+        if rest == "clear confirm" then
+            tracker:ClearArchive()
+            Say(ns.locale == "deDE" and "Lokales Detailarchiv gelöscht. Zähler und hochgeladene Daten bleiben erhalten." or "Local detail archive cleared. Counters and uploaded data are retained.")
+        else
+            Say(ns.locale == "deDE" and "Erst exportieren, /reload und erfolgreichen Upload prüfen! /gpt archive clear confirm löscht lokale Kampfdetails." or "Export, /reload and verify a successful upload first! /gpt archive clear confirm deletes local fight details.")
+        end
     elseif command == "autoexport" then
         if rest ~= "" and rest ~= "on" and rest ~= "off" then
             Say("/gpt autoexport [on|off]")
@@ -314,7 +322,7 @@ local function Command(message)
         Refresh()
     elseif command == "reset" then
         if rest == "confirm" then
-            tracker:Reset()
+            if tracker:Reset() == false then return end
             db.since = date("%d.%m.%Y %H:%M")
             BeginSegment()
             Refresh()
@@ -351,6 +359,13 @@ local function Command(message)
         Say(L["/gpt autoexport [on|off] – Snapshot beim Gebietswechsel aktualisieren"])
         Say(L["Gruppen: Open World, Dungeons, Raids. Schlachtfelder/Arenen werden nicht erfasst."])
     end
+end
+
+local function ObserveEvent(context, ...)
+    local player = UnitGUID("player")
+    ns.ObserveCombat(tracker, player, ...)
+    local timestamp, subevent, _, source, _, _, _, dest, _, _, _, id, name = ...
+    if tracker:Record(timestamp, subevent, source, dest, player, id, name, context, Equipped, GetTime()) then tracker.uiDirty = true end
 end
 
 controller:RegisterEvent("ADDON_LOADED")
@@ -390,11 +405,7 @@ controller:SetScript("OnEvent", function(_, event, ...)
         if UnitAffectingCombat("player") and (not tracker.session or tracker.session.context ~= context) then
             BeginSegment()
         end
-        ns.ObserveCombat(tracker, UnitGUID("player"), CombatLogGetCurrentEventInfo())
-        local timestamp, subevent, _, source, _, _, _, dest, _, _, _, id, name = CombatLogGetCurrentEventInfo()
-        if tracker:Record(timestamp, subevent, source, dest, UnitGUID("player"), id, name, context, Equipped, GetTime()) then
-            Refresh()
-        end
+        ObserveEvent(context, CombatLogGetCurrentEventInfo())
     elseif event == "UNIT_AURA" or event == "UNIT_STATS" or event == "UNIT_ATTACK_SPEED" then
         if (...) == "player" then ns.SampleTelemetry(tracker, GetTime()) end
     elseif event == "PLAYER_REGEN_DISABLED" then
@@ -404,7 +415,7 @@ controller:SetScript("OnEvent", function(_, event, ...)
         fightId = nil
         -- WoW persists SavedVariables after PLAYER_LOGOUT (also /reload).
         -- Keep a fresh local snapshot; uploading remains a separate app opt-in.
-        if event == "PLAYER_LOGOUT" then ns.SaveExport(tracker) end
+        if event == "PLAYER_LOGOUT" or tracker.pendingExport then ns.SaveExport(tracker); tracker.pendingExport = nil end
         Refresh()
     elseif event == "GET_ITEM_INFO_RECEIVED" then
         Refresh()
@@ -428,5 +439,6 @@ controller:SetScript("OnUpdate", function(_, delta)
     elapsed = elapsed + delta
     if elapsed < 1 then return end
     elapsed = 0
-    if tracker and mode == "rates" then Refresh() end
+    if tracker and tracker.telemetrySamplePending then ns.SampleTelemetry(tracker, GetTime()) end
+    if tracker and (tracker.uiDirty or mode == "rates") then tracker.uiDirty = nil; Refresh() end
 end)
